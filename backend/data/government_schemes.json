@@ -1,0 +1,66 @@
+[
+  {
+    "name": "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+    "description": "Direct income support of \u20b96,000 per year to small and marginal farmer families, paid in three equal installments.",
+    "eligibility": "All land-holding farmer families with cultivable land up to 2 hectares.",
+    "benefit": "\u20b96,000 per year (\u20b92,000 every 4 months)",
+    "link": "https://pmkisan.gov.in",
+    "category": "Income Support"
+  },
+  {
+    "name": "PM Fasal Bima Yojana (PMFBY)",
+    "description": "Crop insurance scheme providing financial support to farmers suffering crop loss due to natural calamities, pests, and diseases.",
+    "eligibility": "All farmers growing notified crops in notified areas. Both loanee and non-loanee farmers can apply.",
+    "benefit": "Subsidised premium: 2% for Kharif, 1.5% for Rabi, 5% for commercial crops",
+    "link": "https://pmfby.gov.in",
+    "category": "Crop Insurance"
+  },
+  {
+    "name": "Kisan Credit Card (KCC)",
+    "description": "Provides affordable credit to farmers for crop production, post-harvest expenses, and consumption needs.",
+    "eligibility": "All farmers, including tenant farmers, sharecroppers, and self-help groups.",
+    "benefit": "Credit up to \u20b93 lakh at 4% interest rate (with prompt repayment subvention)",
+    "link": "https://www.pmkisan.gov.in/KCC.aspx",
+    "category": "Credit"
+  },
+  {
+    "name": "Soil Health Card Scheme",
+    "description": "Government provides soil health cards to farmers carrying crop-wise recommendations for nutrients and fertilizers.",
+    "eligibility": "All farmers across India.",
+    "benefit": "Free soil testing and customized fertilizer recommendations every 2 years",
+    "link": "https://soilhealth.dac.gov.in",
+    "category": "Soil Health"
+  },
+  {
+    "name": "e-NAM (National Agriculture Market)",
+    "description": "Pan-India electronic trading portal networking existing APMC mandis to create a unified national market for agricultural commodities.",
+    "eligibility": "Farmers, traders, and buyers registered at APMC mandis.",
+    "benefit": "Better price discovery, transparent bidding, reduced intermediaries",
+    "link": "https://enam.gov.in",
+    "category": "Market Access"
+  },
+  {
+    "name": "Paramparagat Krishi Vikas Yojana (PKVY)",
+    "description": "Promotes organic farming through cluster approach. Supports farmers in adopting organic practices.",
+    "eligibility": "Groups of 50+ farmers in a cluster of 20 hectares.",
+    "benefit": "\u20b950,000 per hectare over 3 years for organic inputs and certification",
+    "link": "https://pgsindia-ncof.gov.in",
+    "category": "Organic Farming"
+  },
+  {
+    "name": "Rashtriya Krishi Vikas Yojana (RKVY)",
+    "description": "Incentivizes states to increase public investment in agriculture by providing flexible funding.",
+    "eligibility": "State-level implementation; benefits reach all farmer categories.",
+    "benefit": "Infrastructure development, technology adoption, and capacity building",
+    "link": "https://rkvy.nic.in",
+    "category": "Development"
+  },
+  {
+    "name": "PM Krishi Sinchayee Yojana (PMKSY)",
+    "description": "Ensures access to protective irrigation through 'Har Khet Ko Pani' and promotes micro-irrigation.",
+    "eligibility": "All farmers, with priority to small and marginal farmers.",
+    "benefit": "Subsidy up to 55% for sprinkler and 45% for drip irrigation (higher for SC/ST)",
+    "link": "https://pmksy.gov.in",
+    "category": "Irrigation"
+  }
+]

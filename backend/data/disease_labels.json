@@ -1,0 +1,42 @@
+{
+  "Healthy": {
+    "description": "The plant leaf appears healthy with no visible signs of disease.",
+    "treatment": "Continue regular maintenance. Ensure proper watering, sunlight, and nutrient supply."
+  },
+  "Bacterial Blight": {
+    "description": "Water-soaked lesions on leaves that turn brown and dry. Common in rice and cotton.",
+    "treatment": "Remove infected plant parts. Apply copper-based bactericides. Use resistant varieties. Avoid overhead irrigation."
+  },
+  "Leaf Rust": {
+    "description": "Orange-brown pustules on the underside of leaves. Common in wheat and barley.",
+    "treatment": "Apply fungicides like Propiconazole or Tebuconazole. Use rust-resistant crop varieties. Ensure proper spacing."
+  },
+  "Powdery Mildew": {
+    "description": "White powdery coating on leaves and stems. Common in grapes, wheat, and vegetables.",
+    "treatment": "Apply sulfur-based or systemic fungicides. Improve air circulation. Remove infected leaves. Avoid overhead watering."
+  },
+  "Late Blight": {
+    "description": "Dark, water-soaked patches on leaves that spread rapidly. Major disease of potato and tomato.",
+    "treatment": "Apply Mancozeb or Metalaxyl-based fungicides. Remove infected plants immediately. Ensure good drainage. Use certified disease-free seeds."
+  },
+  "Leaf Spot": {
+    "description": "Circular brown or black spots on leaves with yellow halos. Common in many crops.",
+    "treatment": "Apply Carbendazim or Chlorothalonil. Remove and destroy infected leaves. Practice crop rotation. Maintain field hygiene."
+  },
+  "Yellow Mosaic Virus": {
+    "description": "Yellow and green mosaic patterns on leaves, causing stunted growth. Common in legumes.",
+    "treatment": "Control whitefly vectors using Imidacloprid. Remove infected plants. Use virus-resistant varieties. Apply neem oil as a preventive."
+  },
+  "Anthracnose": {
+    "description": "Dark, sunken lesions on leaves, stems, and fruits. Common in mango, chili, and beans.",
+    "treatment": "Apply Mancozeb or Copper Oxychloride sprays. Prune infected branches. Avoid working in wet fields. Use disease-free seeds."
+  },
+  "Downy Mildew": {
+    "description": "Yellow patches on upper leaf surface with fuzzy growth underneath. Common in grapes and cucurbits.",
+    "treatment": "Apply Metalaxyl or Ridomil MZ. Ensure good air circulation. Remove infected leaves. Avoid excess moisture."
+  },
+  "Fusarium Wilt": {
+    "description": "Yellowing and wilting of leaves, starting from lower parts. Vascular browning visible on cutting stem.",
+    "treatment": "Soil treatment with Trichoderma viride. Use resistant varieties. Practice long crop rotation (3-4 years). Maintain proper soil pH."
+  }
+}

@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI-powered Agricultural Demand Prediction System — Crop Recommendation, Price Forecasting, Fertilizer Guidance, Disease Detection, and Market Connection for Indian Farmers.">
+  <title>Hanu Agri — Agricultural Demand Prediction System</title>
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Leaflet CSS for Maps -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader">
+    <div class="loader-spinner"></div>
+    <p id="loadingText">Analyzing data...</p>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Sidebar Overlay (Mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-container">
+  
+  <!-- ═══ Sidebar ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <a href="#" class="sidebar-logo" onclick="navigateTo('dashboard')">
+        <img src="assets/hanu_logo.png" alt="Hanu Agri" style="height: 44px; width: 44px; object-fit: contain; border-radius: 50%; background: white;">
+        <div class="logo-text">
+          <h1>Hanu Agri</h1>
+          <span>Demand Prediction</span>
+        </div>
+      </a>
+    </div>
+    
+    <nav class="sidebar-nav">
+      <div class="nav-section-title" data-i18n="nav_overview">Overview</div>
+      <a class="nav-item active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="dashboard">Dashboard</span>
+      </a>
+      
+      <div class="nav-section-title" data-i18n="nav_ai_modules">AI Modules</div>
+      <a class="nav-item" data-page="crop" onclick="navigateTo('crop')">
+        <span class="nav-icon">🌱</span>
+        <span data-i18n="crop">Crop Recommendation</span>
+      </a>
+      <a class="nav-item" data-page="fertilizer" onclick="navigateTo('fertilizer')">
+        <span class="nav-icon">🧪</span>
+        <span data-i18n="fertilizer">Fertilizer Guidance</span>
+      </a>
+      <a class="nav-item" data-page="price" onclick="navigateTo('price')">
+        <span class="nav-icon">📈</span>
+        <span data-i18n="price">Price Prediction</span>
+      </a>
+      <a class="nav-item" data-page="disease" onclick="navigateTo('disease')">
+        <span class="nav-icon">🔬</span>
+        <span data-i18n="disease">Disease Detection</span>
+      </a>
+      <a class="nav-item" data-page="demand-risk" onclick="navigateTo('demand-risk')">
+        <span class="nav-icon">📊</span>
+        <span data-i18n="demand-risk">Demand & Glut Risk</span>
+      </a>
+      <a class="nav-item" data-page="roi-calculator" onclick="navigateTo('roi-calculator')">
+        <span class="nav-icon">💰</span>
+        <span data-i18n="roi-calculator">Crop ROI Calculator</span>
+      </a>
+      <a class="nav-item" data-page="weather-advisory" onclick="navigateTo('weather-advisory')">
+        <span class="nav-icon">🌤️</span>
+        <span data-i18n="weather-advisory">Weather Advisory</span>
+      </a>
+      
+      <div class="nav-section-title" data-i18n="nav_services">Services</div>
+      <a class="nav-item" data-page="market" onclick="navigateTo('market')">
+        <span class="nav-icon">🏪</span>
+        <span data-i18n="market">Market Finder</span>
+      </a>
+      <a class="nav-item" data-page="schemes" onclick="navigateTo('schemes')">
+        <span class="nav-icon">🏛️</span>
+        <span data-i18n="schemes">Government Schemes</span>
+      </a>
+    </nav>
+    
+    <div class="sidebar-footer">
+      <p class="version">Hanu Agri v1.0 — Ghousia College of Engineering 2026-2027</p>
+    </div>
+  </aside>
+  
+  <!-- ═══ Main Content ═══ -->
+  <main class="main-content">
+    
+    <!-- Top Bar -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()">☰</button>
+        <h2 class="page-title" id="pageTitle">Dashboard</h2>
+      </div>
+      <div class="top-bar-right">
+        <select class="lang-selector" id="langSelector" onchange="changeLanguage(this.value)">
+          <option value="en">🇬🇧 English</option>
+          <option value="kn">🇮🇳 ಕನ್ನಡ</option>
+          <option value="hi">🇮🇳 हिन्दी</option>
+        </select>
+        <div class="status-badge">
+          <div class="status-dot"></div>
+          <span data-i18n="status_active">AI Models Active</span>
+        </div>
+      </div>
+    </header>
+    
+    <div class="content-area">
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- DASHBOARD -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section active" id="page-dashboard">
+        
+        <div class="hero-section">
+          <div class="hero-content">
+            <h2 data-i18n="hero_title">Demand Prediction of Agricultural Crops Using Artificial Intelligence</h2>
+            <p data-i18n="hero_desc">Empowering Indian farmers with AI-driven insights — from crop selection and fertilizer guidance to real-time price forecasting and market connections. Make data-backed decisions for better yields and higher profits.</p>
+            <div class="hero-stats">
+              <div class="stat-item">
+                <span class="stat-value">22+</span>
+                <span class="stat-label" data-i18n="stat_crops">Crops Supported</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">10</span>
+                <span class="stat-label" data-i18n="stat_states">Indian States</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">95%+</span>
+                <span class="stat-label" data-i18n="stat_accuracy">Prediction Accuracy</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-value">9</span>
+                <span class="stat-label" data-i18n="stat_modules">AI Modules</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <h3 data-i18n="explore_modules" style="font-family: var(--font-heading); font-size: 1.1rem; margin-bottom: 16px; color: var(--color-text-secondary);">
+          Explore AI Modules
+        </h3>
+        
+        <div class="module-grid">
+          <div class="module-card" onclick="navigateTo('crop')">
+            <div class="module-icon crop">🌱</div>
+            <h3>Crop Recommendation</h3>
+            <p>Get AI-powered crop suggestions based on your soil nutrients (N, P, K), weather conditions, and rainfall patterns.</p>
+            <span class="card-arrow">→</span>
+          </div>
+          
+          <div class="module-card" onclick="navigateTo('fertilizer')">
+            <div class="module-icon fertilizer">🧪</div>
+            <h3>Fertilizer Guidance</h3>
+            <p>Receive personalized fertilizer recommendations tailored to your soil composition, crop type, and nutrient levels.</p>
+            <span class="card-arrow">→</span>
+          </div>
+          
+          <div class="module-card" onclick="navigateTo('price')">
+            <div class="module-icon price">📈</div>
+            <h3>Price & Demand Prediction</h3>
+            <p>Forecast commodity prices for the next 30–90 days using AI. Plan your sowing and selling for maximum profit.</p>
+            <span class="card-arrow">→</span>
+          </div>
+          
+          <div class="module-card" onclick="navigateTo('disease')">
+            <div class="module-icon disease">🔬</div>
+            <h3>Disease Detection</h3>
+            <p>Upload a leaf image and our CNN model will identify plant diseases with treatment suggestions.</p>
+            <span class="card-arrow">→</span>
+          </div>
+          
+          <div class="module-card" onclick="navigateTo('market')">
+            <div class="module-icon market">🏪</div>
+            <h3>Market Finder</h3>
+            <p>Locate nearby APMC markets using GPS. Compare prices and connect directly with buyers — no middlemen.</p>
+            <span class="card-arrow">→</span>
+          </div>
+          
+          <div class="module-card" onclick="navigateTo('schemes')">
+            <div class="module-icon schemes">🏛️</div>
+            <h3>Government Schemes</h3>
+            <p>Discover government financial schemes, subsidies, and insurance programs you're eligible for.</p>
+            <span class="card-arrow">→</span>
+          </div>
+        </div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- CROP RECOMMENDATION -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-crop">
+        <div class="section-header">
+          <h2><span>🌱</span> Crop Recommendation</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card">
+          <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+            Enter your soil nutrient levels and weather conditions to get AI-powered crop recommendations using our Random Forest model.
+          </p>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label><span class="label-icon">🧬</span> Nitrogen (N)</label>
+              <input type="number" id="crop-n" placeholder="e.g., 90" min="0" max="200" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🧬</span> Phosphorus (P)</label>
+              <input type="number" id="crop-p" placeholder="e.g., 42" min="0" max="200" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🧬</span> Potassium (K)</label>
+              <input type="number" id="crop-k" placeholder="e.g., 43" min="0" max="250" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🌡️</span> Temperature (°C)</label>
+              <input type="number" id="crop-temp" placeholder="e.g., 24.5" min="-10" max="55" step="0.1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">💧</span> Humidity (%)</label>
+              <input type="number" id="crop-humidity" placeholder="e.g., 82" min="0" max="100" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">⚗️</span> pH Level</label>
+              <input type="number" id="crop-ph" placeholder="e.g., 6.5" min="0" max="14" step="0.01">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🌧️</span> Rainfall (mm)</label>
+              <input type="number" id="crop-rainfall" placeholder="e.g., 200" min="0" max="500" step="1">
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn-primary" id="cropPredictBtn" onclick="predictCrop()">
+              🔍 Get Recommendation
+            </button>
+            <button class="btn-secondary" onclick="fillSampleCrop()">
+              📋 Fill Sample Data
+            </button>
+          </div>
+        </div>
+        
+        <div id="cropResult" class="hidden"></div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- FERTILIZER RECOMMENDATION -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-fertilizer">
+        <div class="section-header">
+          <h2><span>🧪</span> Fertilizer Guidance</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card">
+          <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+            Enter soil conditions and crop type for tailored fertilizer recommendations using our Decision Tree model.
+          </p>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label><span class="label-icon">🌡️</span> Temperature (°C)</label>
+              <input type="number" id="fert-temp" placeholder="e.g., 28" min="-10" max="55" step="0.1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">💧</span> Humidity (%)</label>
+              <input type="number" id="fert-humidity" placeholder="e.g., 65" min="0" max="100" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">💦</span> Soil Moisture (%)</label>
+              <input type="number" id="fert-moisture" placeholder="e.g., 40" min="0" max="100" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🏜️</span> Soil Type</label>
+              <select id="fert-soil">
+                <option value="">Select soil type</option>
+                <option value="Sandy">Sandy</option>
+                <option value="Loamy">Loamy</option>
+                <option value="Black">Black</option>
+                <option value="Red">Red</option>
+                <option value="Clayey">Clayey</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🌾</span> Crop Type</label>
+              <select id="fert-crop">
+                <option value="">Select crop</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🧬</span> Nitrogen (N)</label>
+              <input type="number" id="fert-n" placeholder="e.g., 30" min="0" max="200" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🧬</span> Phosphorous (P)</label>
+              <input type="number" id="fert-p" placeholder="e.g., 50" min="0" max="200" step="1">
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">🧬</span> Potassium (K)</label>
+              <input type="number" id="fert-k" placeholder="e.g., 40" min="0" max="250" step="1">
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn-primary" onclick="predictFertilizer()">
+              🧪 Get Fertilizer Advice
+            </button>
+            <button class="btn-secondary" onclick="fillSampleFertilizer()">
+              📋 Fill Sample Data
+            </button>
+          </div>
+        </div>
+        
+        <div id="fertilizerResult" class="hidden"></div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- PRICE PREDICTION -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-price">
+        <div class="section-header">
+          <h2><span>📈</span> Price & Demand Prediction</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card">
+          <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+            Select a commodity and state to forecast prices for up to 90 days using our Gradient Boosting model.
+          </p>
+          
+          <div class="form-grid">
+            <div class="form-group">
+              <label><span class="label-icon">🌾</span> Commodity</label>
+              <select id="price-commodity">
+                <option value="">Select commodity</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">📍</span> State</label>
+              <select id="price-state">
+                <option value="">Select state</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label><span class="label-icon">📅</span> Forecast Period (Days)</label>
+              <select id="price-days">
+                <option value="7">7 Days</option>
+                <option value="15">15 Days</option>
+                <option value="30" selected>30 Days</option>
+                <option value="60">60 Days</option>
+                <option value="90">90 Days</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="btn-group">
+            <button class="btn-primary" onclick="predictPrice()">
+              📊 Forecast Prices
+            </button>
+          </div>
+        </div>
+        
+        <div id="priceResult" class="hidden"></div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- DISEASE DETECTION -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-disease">
+        <div class="section-header">
+          <h2><span>🔬</span> Disease Detection</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card">
+          <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+            Upload a photo of a plant leaf to detect diseases using our CNN-based image classification model (ResNet-9 architecture).
+          </p>
+          
+          <div class="upload-zone" id="uploadZone">
+            <span class="upload-icon">📸</span>
+            <h3>Drop leaf image here or click to upload</h3>
+            <p>Supports JPG, PNG, WEBP • Max 10MB</p>
+            <input type="file" id="diseaseImage" accept="image/*" onchange="handleImageUpload(event)">
+          </div>
+          
+          <img id="imagePreview" class="image-preview" alt="Uploaded leaf preview">
+          
+          <div class="btn-group" id="diseaseActions" style="display: none;">
+            <button class="btn-primary" onclick="detectDisease()">
+              🔍 Analyze Image
+            </button>
+            <button class="btn-secondary" onclick="clearImage()">
+              ✕ Clear Image
+            </button>
+          </div>
+        </div>
+        
+        <div id="diseaseResult" class="hidden"></div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- MARKET FINDER -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-market">
+        <div class="section-header">
+          <h2><span>🏪</span> Market Finder</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card">
+          <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 0.9rem;">
+            Find nearby APMC markets and mandis. Connect directly with buyers — eliminate middlemen for fair prices.
+          </p>
+          
+          <div class="btn-group">
+            <button class="btn-primary" onclick="findNearbyMarkets()">
+              📍 Use My Location
+            </button>
+            <button class="btn-secondary" onclick="useDefaultLocation()">
+              🗺️ Use Default (BG Nagara)
+            </button>
+          </div>
+        </div>
+        
+        <div id="mapContainer" class="map-container hidden"></div>
+        <div id="marketList" class="hidden"></div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- GOVERNMENT SCHEMES -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-schemes">
+        <div class="section-header">
+          <h2><span>🏛️</span> Government Schemes</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card mb-2">
+          <p style="color: var(--color-text-secondary); font-size: 0.9rem;">
+            Explore government welfare schemes, subsidies, and financial support programs for Indian farmers.
+          </p>
+        </div>
+        
+        <div id="schemesGrid" class="schemes-grid"></div>
+      </section>
+
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- DEMAND & GLUT RISK INDEX -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-demand-risk">
+        <div class="section-header">
+          <h2><span>📊</span> Regional Demand-Supply Glut Risk Index</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card mb-2">
+          <p style="color: var(--color-text-secondary); font-size: 0.9rem;">
+            Analyze crop overproduction risk across Indian states. Prevent financial losses by identifying oversupplied crops before planting.
+          </p>
+        </div>
+        
+        <div class="input-card glass-card">
+          <form id="demandRiskForm" onsubmit="event.preventDefault(); fetchDemandRisk();">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="riskCropSelect">Select Crop</label>
+                <select id="riskCropSelect" class="form-control">
+                  <option value="Rice">Rice</option>
+                  <option value="Wheat">Wheat</option>
+                  <option value="Maize">Maize</option>
+                  <option value="Cotton">Cotton</option>
+                  <option value="Sugarcane">Sugarcane</option>
+                  <option value="Tomato">Tomato</option>
+                  <option value="Chickpea">Chickpea</option>
+                  <option value="Banana">Banana</option>
+                  <option value="Pomegranate">Pomegranate</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="riskStateSelect">Select State</label>
+                <select id="riskStateSelect" class="form-control">
+                  <option value="Karnataka">Karnataka</option>
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Haryana">Haryana</option>
+                  <option value="Madhya Pradesh">Madhya Pradesh</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Gujarat">Gujarat</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn-primary mt-2">
+              <span>📊</span> Analyze Market Risk
+            </button>
+          </form>
+        </div>
+
+        <div id="riskResultContainer" class="hidden mt-2">
+          <div class="glass-card">
+            <div class="risk-meter-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+              <div>
+                <h3 id="riskCropStateTitle" style="font-size: 1.2rem; color: var(--color-text-primary);">Crop Market Risk Analysis</h3>
+                <p id="riskSubtitle" style="font-size: 0.85rem; color: var(--color-text-secondary);">Projected Supply vs Regional Consumption Demand</p>
+              </div>
+              <div id="riskBadge" class="status-pill" style="font-weight: 700; font-size: 1.1rem; padding: 8px 18px; border-radius: 20px;">
+                Low Risk
+              </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+              <div class="metric-box">
+                <span class="metric-label">Supply-to-Demand Ratio</span>
+                <span class="metric-value" id="riskRatioVal">1.05</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">Projected Regional Supply</span>
+                <span class="metric-value" id="riskSupplyVal">1,200,000 MT</span>
+              </div>
+              <div class="metric-box">
+                <span class="metric-label">Estimated Consumption Demand</span>
+                <span class="metric-value" id="riskDemandVal">1,150,000 MT</span>
+              </div>
+            </div>
+
+            <div id="riskRecommendationBox" style="background: rgba(255, 255, 255, 0.05); padding: 16px; border-radius: 12px; border-left: 4px solid var(--color-primary); margin-bottom: 20px;">
+              <p id="riskRecommendationText" style="font-size: 0.95rem; line-height: 1.5;"></p>
+            </div>
+
+            <div style="margin-top: 24px;">
+              <h4 style="font-size: 1rem; margin-bottom: 12px;">Suggested Diversification Crops (Lower Risk):</h4>
+              <div id="riskAlternativesChips" style="display: flex; gap: 10px; flex-wrap: wrap;"></div>
+            </div>
+
+            <div style="margin-top: 24px; height: 260px;">
+              <canvas id="riskTrendChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- CROP PROFITABILITY & ROI CALCULATOR -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-roi-calculator">
+        <div class="section-header">
+          <h2><span>💰</span> AI Crop Profitability & Net ROI Calculator</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+
+        <div class="glass-card mb-2">
+          <p style="color: var(--color-text-secondary); font-size: 0.9rem;">
+            Calculate total cultivation investment, expected yield, gross revenue, and net profit per acre for smart crop financial planning.
+          </p>
+        </div>
+
+        <div class="input-card glass-card">
+          <form id="roiForm" onsubmit="event.preventDefault(); calculateROI();">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="roiCropSelect">Select Crop</label>
+                <select id="roiCropSelect" class="form-control" onchange="calculateROI()">
+                  <option value="Rice">Rice</option>
+                  <option value="Wheat">Wheat</option>
+                  <option value="Maize">Maize</option>
+                  <option value="Cotton">Cotton</option>
+                  <option value="Sugarcane">Sugarcane</option>
+                  <option value="Chickpea">Chickpea</option>
+                  <option value="Banana">Banana</option>
+                  <option value="Pomegranate">Pomegranate</option>
+                  <option value="Grapes">Grapes</option>
+                  <option value="Coffee">Coffee</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="roiAcresInput">Farm Land Size: <strong id="acresDisplay">1.0</strong> Acres</label>
+                <input type="range" id="roiAcresInput" min="0.5" max="25" step="0.5" value="1.0" class="form-control" oninput="document.getElementById('acresDisplay').innerText=this.value; calculateROI();">
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <div id="roiResultContainer" class="mt-2">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div class="metric-box" style="border-top: 3px solid #3b82f6;">
+              <span class="metric-label">Estimated Total Yield</span>
+              <span class="metric-value" id="roiYieldVal">22.0 Quintals</span>
+            </div>
+            <div class="metric-box" style="border-top: 3px solid #ef4444;">
+              <span class="metric-label">Total Cost of Cultivation</span>
+              <span class="metric-value" id="roiCostVal">₹25,000</span>
+            </div>
+            <div class="metric-box" style="border-top: 3px solid #10b981;">
+              <span class="metric-label">Gross Market Revenue</span>
+              <span class="metric-value" id="roiRevenueVal">₹57,200</span>
+            </div>
+            <div class="metric-box" style="border-top: 3px solid #8b5cf6;">
+              <span class="metric-label">Net Profit & ROI %</span>
+              <span class="metric-value" id="roiProfitVal" style="color: #10b981;">₹32,200 (128.8%)</span>
+            </div>
+          </div>
+
+          <div class="form-grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div class="glass-card">
+              <h3 style="font-size: 1.1rem; margin-bottom: 16px;">Cost Breakdown (per Acre)</h3>
+              <div style="height: 240px;">
+                <canvas id="roiCostChart"></canvas>
+              </div>
+            </div>
+            <div class="glass-card">
+              <h3 style="font-size: 1.1rem; margin-bottom: 16px;">Top Alternative Crops Comparison</h3>
+              <div id="roiComparisonList" style="display: flex; flex-direction: column; gap: 12px;"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- SMART WEATHER & PRECISION IRRIGATION ADVISORY -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-weather-advisory">
+        <div class="section-header">
+          <h2><span>🌤️</span> Smart Weather & Precision Advisory</h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+
+        <div class="glass-card mb-2">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <p style="color: var(--color-text-secondary); font-size: 0.9rem; margin: 0;">
+              Real-time 7-day weather forecast, evapotranspiration water requirements, and automated pest/spraying advisories.
+            </p>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <label for="weatherStateSelect" style="font-size: 0.85rem; font-weight: 600;">Region:</label>
+              <select id="weatherStateSelect" class="form-control" style="padding: 6px 12px; font-size: 0.85rem; width: auto;" onchange="loadWeatherAdvisory(this.value)">
+                <option value="Karnataka">Karnataka (Bengaluru/Mandya)</option>
+                <option value="Maharashtra">Maharashtra (Pune/Nashik)</option>
+                <option value="Uttar Pradesh">Uttar Pradesh (Lucknow)</option>
+                <option value="Punjab">Punjab (Ludhiana)</option>
+                <option value="Haryana">Haryana (Karnal)</option>
+                <option value="Madhya Pradesh">Madhya Pradesh (Indore)</option>
+                <option value="Tamil Nadu">Tamil Nadu (Coimbatore)</option>
+                <option value="Gujarat">Gujarat (Rajkot)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="weatherContainer">
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <div class="glass-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(59, 130, 246, 0.15)); border: 1px solid rgba(255,255,255,0.2);">
+              <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);">Today's Temperature</span>
+              <div style="font-size: 2.2rem; font-weight: 800; color: var(--color-text-primary); margin: 8px 0;" id="weatherTempVal">31°C</div>
+              <span style="font-size: 0.85rem; color: var(--color-text-secondary);" id="weatherTempMinMax">High: 34°C | Low: 22°C</span>
+            </div>
+
+            <div class="glass-card">
+              <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);">Crop Water Need (ET₀)</span>
+              <div style="font-size: 1.8rem; font-weight: 700; color: #3b82f6; margin: 8px 0;" id="weatherWaterVal">18,200 L / acre</div>
+              <span style="font-size: 0.85rem; color: var(--color-text-secondary);" id="weatherETVal">Evapotranspiration: 4.5 mm/day</span>
+            </div>
+
+            <div class="glass-card">
+              <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--color-text-secondary);">Pest & Fungal Vulnerability</span>
+              <div style="font-size: 1.4rem; font-weight: 700; color: #f59e0b; margin: 8px 0;" id="weatherPestBadge">Moderate Risk</div>
+              <span style="font-size: 0.85rem; color: var(--color-text-secondary);" id="weatherHumidityVal">Humidity: 68%</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;" class="form-grid">
+            <div class="glass-card" style="border-left: 4px solid #3b82f6;">
+              <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: #3b82f6;">💧 Precision Irrigation Advice</h4>
+              <p id="weatherIrrigationAdvice" style="font-size: 0.9rem; line-height: 1.5; color: var(--color-text-primary);"></p>
+            </div>
+            <div class="glass-card" style="border-left: 4px solid #10b981;">
+              <h4 style="font-size: 0.95rem; margin-bottom: 8px; color: #10b981;">🌿 Pesticide Spraying Guidance</h4>
+              <p id="weatherSprayingAdvice" style="font-size: 0.9rem; line-height: 1.5; color: var(--color-text-primary);"></p>
+            </div>
+          </div>
+
+          <div class="glass-card">
+            <h3 style="font-size: 1.1rem; margin-bottom: 16px;">7-Day Weather & Rainfall Trend</h3>
+            <div style="height: 250px;">
+              <canvas id="weatherTrendChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+      
+    </div>
+  </main>
+</div>
+<!-- ═══ Chatbot Widget ═══ -->
+<button class="chatbot-toggle" id="chatbotToggle" onclick="toggleChatbot()">
+  <span class="chat-icon">💬</span> Hanu Agri
+</button>
+
+<div class="chatbot-container hidden" id="chatbotContainer">
+  <div class="chatbot-header">
+    <div class="chatbot-title">
+      <span class="chat-icon">🤖</span> Hanu Agri Assistant
+    </div>
+    <button class="chatbot-close" onclick="toggleChatbot()">✕</button>
+  </div>
+  <div class="chatbot-messages" id="chatbotMessages">
+    <!-- Messages will be appended here -->
+  </div>
+  <div class="chatbot-quick-replies" id="chatbotQuickReplies">
+    <button onclick="sendQuickReply('🌦️ Live Weather')">🌦️ Live Weather</button>
+    <button onclick="sendQuickReply('🧪 Fertilizer Prices')">🧪 Fertilizer Prices</button>
+    <button onclick="sendQuickReply('🌱 Fertilizer Recommendations')">🌱 Fertilizer Recommendations</button>
+    <button onclick="sendQuickReply('📈 Crop Price Prediction')">📈 Crop Price Prediction</button>
+  </div>
+  <div class="chatbot-input">
+    <input type="text" id="chatbotInput" placeholder="Ask me anything..." onkeypress="handleChatInput(event)">
+    <button class="btn-send" onclick="sendChatMessage()">➤</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+
+</body>
+</html>
