@@ -1,6 +1,6 @@
 [build]
 builder = "NIXPACKS"
-buildCommand = "pip install -r backend/requirements.txt"
+buildCommand = "pip install -r backend/requirements.txt && cd backend && python setup_models.py"
 
 [deploy]
 startCommand = "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT"

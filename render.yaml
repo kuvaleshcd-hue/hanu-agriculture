@@ -2,7 +2,7 @@ services:
   - type: web
     name: hanu-agri-backend
     env: python
-    buildCommand: "cd backend && pip install -r requirements.txt"
+    buildCommand: "cd backend && pip install -r requirements.txt && python setup_models.py"
     startCommand: "cd backend && gunicorn app:app --bind 0.0.0.0:$PORT"
     envVars:
       - key: PYTHON_VERSION
