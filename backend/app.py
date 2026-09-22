@@ -511,97 +511,52 @@ def fetch_weather_for_location(query):
     import json
     try:
         encoded_query = urllib.parse.quote(query)
-        # Try Open-Meteo Geocoding API first
-        geocode_url = f"https://geocoding-api.open-meteo.com/v1/search?name={encoded_query}&count=1&language=en&format=json"
+        url = f"https://wttr.in/{encoded_query}?format=j1"
         
-        req = urllib.request.Request(geocode_url, headers={'User-Agent': 'HanuAgri/1.0'})
+        req = urllib.request.Request(url, headers={'User-Agent': 'curl/7.68.0'})
         with urllib.request.urlopen(req, timeout=5) as response:
-            geo_data = json.loads(response.read().decode('utf-8'))
+            data = json.loads(response.read().decode('utf-8'))
             
-        if not geo_data.get('results'):
-            # Fallback to Nominatim (OpenStreetMap) if city not found
-            nom_url = f"https://nominatim.openstreetmap.org/search?q={encoded_query}&format=json&limit=1"
-            req_nom = urllib.request.Request(nom_url, headers={'User-Agent': 'HanuAgri/1.0 (Contact: kuvalesh@gmail.com)'})
-            with urllib.request.urlopen(req_nom, timeout=5) as response_nom:
-                nom_data = json.loads(response_nom.read().decode('utf-8'))
-                
-            if not nom_data:
-                return None
-                
-            loc = nom_data[0]
-            lat = float(loc['lat'])
-            lon = float(loc['lon'])
-            
-            # Make the name cleaner if possible from display_name
-            display_parts = loc.get('display_name', query.title()).split(',')
-            location_name = f"{display_parts[0]}, {display_parts[-3].strip() if len(display_parts) > 2 else ''}".strip(', ')
+        current = data['current_condition'][0]
+        area = data['nearest_area'][0]
+        
+        location_name = f"{area['areaName'][0]['value']}, {area['region'][0]['value']}"
+        temp = current['temp_C']
+        humidity = current['humidity']
+        feels_like = current['FeelsLikeC']
+        wind_speed = current['windspeedKmph']
+        precipitation = current['precipMM']
+        desc = current['weatherDesc'][0]['value']
+        
+        # Map wttr.in descriptions to emojis roughly
+        desc_lower = desc.lower()
+        if 'sun' in desc_lower or 'clear' in desc_lower:
+            emoji = "☀️"
+        elif 'cloud' in desc_lower or 'overcast' in desc_lower:
+            emoji = "☁️"
+        elif 'rain' in desc_lower or 'drizzle' in desc_lower:
+            emoji = "🌧️"
+        elif 'thunder' in desc_lower or 'storm' in desc_lower:
+            emoji = "⛈️"
+        elif 'snow' in desc_lower:
+            emoji = "❄️"
+        elif 'fog' in desc_lower or 'mist' in desc_lower:
+            emoji = "🌫️"
         else:
-            loc = geo_data['results'][0]
-            lat = loc['latitude']
-            lon = loc['longitude']
-            name = loc['name']
-            admin1 = loc.get('admin1', '')
-            country = loc.get('country', '')
+            emoji = "🌤️"
             
-            location_name = f"{name}, {admin1}" if admin1 else name
-            if country and country != 'India':
-                location_name += f", {country}"
-            
-            
-        weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m&timezone=auto"
-        
-        req_w = urllib.request.Request(weather_url, headers={'User-Agent': 'HanuAgri/1.0'})
-        with urllib.request.urlopen(req_w, timeout=5) as response:
-            w_data = json.loads(response.read().decode('utf-8'))
-            
-        current = w_data.get('current', {})
-        code = current.get('weather_code', 0)
-        
-        weather_desc = {
-            0: ("Clear sky", "☀️"),
-            1: ("Mainly clear", "🌤️"),
-            2: ("Partly cloudy", "⛅"),
-            3: ("Overcast", "☁️"),
-            45: ("Foggy", "🌫️"),
-            48: ("Depositing rime fog", "🌫️"),
-            51: ("Light drizzle", "🌧️"),
-            53: ("Moderate drizzle", "🌧️"),
-            55: ("Dense drizzle", "🌧️"),
-            56: ("Light freezing drizzle", "🌧️"),
-            57: ("Dense freezing drizzle", "🌧️"),
-            61: ("Slight rain", "🌧️"),
-            63: ("Moderate rain", "🌧️"),
-            65: ("Heavy rain", "🌧️"),
-            66: ("Light freezing rain", "🌧️"),
-            67: ("Heavy freezing rain", "🌧️"),
-            71: ("Slight snowfall", "❄️"),
-            73: ("Moderate snowfall", "❄️"),
-            75: ("Heavy snowfall", "❄️"),
-            77: ("Snow grains", "❄️"),
-            80: ("Slight rain showers", "🌦️"),
-            81: ("Moderate rain showers", "🌦️"),
-            82: ("Violent rain showers", "🌦️"),
-            85: ("Slight snow showers", "❄️"),
-            86: ("Heavy snow showers", "❄️"),
-            95: ("Thunderstorm", "⛈️"),
-            96: ("Thunderstorm with slight hail", "⛈️"),
-            99: ("Thunderstorm with heavy hail", "⛈️"),
-        }
-        
-        desc, emoji = weather_desc.get(code, ("Clear sky", "☀️"))
-        
         return {
             'location': location_name,
-            'temp': current.get('temperature_2m'),
-            'humidity': current.get('relative_humidity_2m'),
-            'feels_like': current.get('apparent_temperature'),
-            'wind_speed': current.get('wind_speed_10m'),
-            'precipitation': current.get('precipitation', 0),
+            'temp': temp,
+            'humidity': humidity,
+            'feels_like': feels_like,
+            'wind_speed': wind_speed,
+            'precipitation': precipitation,
             'description': desc,
             'emoji': emoji
         }
     except Exception as e:
-        print(f"Error fetching weather: {e}")
+        print(f"Error fetching weather from wttr.in: {e}")
         return None
 
 def match_commodity(text):
