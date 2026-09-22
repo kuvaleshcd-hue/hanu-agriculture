@@ -200,6 +200,7 @@ function navigateTo(page) {
   if (page === 'roi-calculator') calculateROI();
   if (page === 'weather-advisory') loadWeatherAdvisory();
   if (page === 'crop-maturity') initMaturityPage();
+  if (page === 'market') findNearbyMarkets();
   
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
