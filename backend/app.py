@@ -521,7 +521,7 @@ def fetch_weather_for_location(query):
         if not geo_data.get('results'):
             # Fallback to Nominatim (OpenStreetMap) if city not found
             nom_url = f"https://nominatim.openstreetmap.org/search?q={encoded_query}&format=json&limit=1"
-            req_nom = urllib.request.Request(nom_url, headers={'User-Agent': 'HanuAgri/1.0 (Contact: admin@example.com)'})
+            req_nom = urllib.request.Request(nom_url, headers={'User-Agent': 'HanuAgri/1.0 (Contact: kuvalesh@gmail.com)'})
             with urllib.request.urlopen(req_nom, timeout=5) as response_nom:
                 nom_data = json.loads(response_nom.read().decode('utf-8'))
                 
@@ -550,7 +550,7 @@ def fetch_weather_for_location(query):
             
         weather_url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m&timezone=auto"
         
-        req_w = urllib.request.Request(weather_url, headers={'User-Agent': 'Mozilla/5.0'})
+        req_w = urllib.request.Request(weather_url, headers={'User-Agent': 'HanuAgri/1.0'})
         with urllib.request.urlopen(req_w, timeout=5) as response:
             w_data = json.loads(response.read().decode('utf-8'))
             
