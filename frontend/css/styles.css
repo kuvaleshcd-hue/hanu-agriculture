@@ -96,7 +96,8 @@ html {
 
 body {
   font-family: var(--font-body);
-  background: var(--color-bg-primary);
+  background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(248, 250, 252, 0.95)), url('../assets/bg_landscape.jpg') no-repeat center center fixed;
+  background-size: cover;
   color: var(--color-text-primary);
   line-height: 1.6;
   min-height: 100vh;
@@ -1776,4 +1777,426 @@ body::before {
 @keyframes typingBounce {
   0%, 80%, 100% { transform: scale(0); }
   40% { transform: scale(1); }
+}
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   CROP MATURITY / HARVEST READINESS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Video Upload Zone ────────────────────────────────────────────────── */
+.maturity-upload-zone {
+  min-height: 160px;
+}
+
+.maturity-video-preview {
+  width: 100%;
+  max-height: 360px;
+  border-radius: 12px;
+  border: 2px solid var(--color-border);
+  background: #000;
+  object-fit: contain;
+}
+
+/* ── Verdict Banner ───────────────────────────────────────────────────── */
+.maturity-verdict-banner {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 24px 28px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.maturity-verdict-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  border-radius: inherit;
+}
+
+.maturity-ready {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+  border: 2px solid rgba(16, 185, 129, 0.35);
+}
+.maturity-ready::before { background: #10b981; }
+
+.maturity-almost {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+  border: 2px solid rgba(245, 158, 11, 0.35);
+}
+.maturity-almost::before { background: #f59e0b; }
+
+.maturity-not-ready {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.05));
+  border: 2px solid rgba(239, 68, 68, 0.35);
+}
+.maturity-not-ready::before { background: #ef4444; }
+
+.verdict-icon {
+  font-size: 2.8rem;
+  flex-shrink: 0;
+}
+
+.verdict-text {
+  flex: 1;
+}
+
+.verdict-text h2 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+  color: var(--color-text-primary);
+}
+
+.verdict-text p {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.verdict-confidence {
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.conf-value {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.conf-label {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+/* ── Maturity Metrics Row ─────────────────────────────────────────────── */
+.maturity-metrics-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+/* ── Maturity Gauge Ring ──────────────────────────────────────────────── */
+.maturity-gauge-card {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  flex-shrink: 0;
+}
+
+.maturity-ring {
+  width: 140px;
+  height: 140px;
+  transform: rotate(-90deg);
+}
+
+.ring-bg {
+  fill: none;
+  stroke: var(--color-bg-input);
+  stroke-width: 10;
+}
+
+.ring-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.2s ease-out;
+  animation: ringFillIn 1.2s ease-out forwards;
+}
+
+.maturity-ready-ring { stroke: #10b981; }
+.maturity-almost-ring { stroke: #f59e0b; }
+.maturity-not-ready-ring { stroke: #ef4444; }
+
+@keyframes ringFillIn {
+  from { stroke-dashoffset: 339.292; }
+  to { stroke-dashoffset: var(--target-offset); }
+}
+
+.gauge-center-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.gauge-value {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.gauge-label {
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* ── Quick Stats Grid ─────────────────────────────────────────────────── */
+.maturity-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  flex: 1;
+}
+
+.maturity-stat {
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.maturity-stat:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+.stat-emoji {
+  display: block;
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.stat-val {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.stat-lbl {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* ── Growth Stage Progress ────────────────────────────────────────────── */
+.color-stages-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.color-stage-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--color-bg-input);
+  border: 1px solid var(--color-border);
+  font-size: 0.85rem;
+  transition: all 0.25s;
+}
+
+.color-stage-item.current-stage {
+  border-color: var(--color-primary);
+  background: rgba(234, 179, 8, 0.08);
+  box-shadow: 0 0 0 2px rgba(234, 179, 8, 0.2);
+}
+
+.color-stage-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.3);
+}
+
+.color-stage-label {
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--color-text-primary);
+}
+
+.color-stage-name {
+  color: var(--color-text-secondary);
+  font-size: 0.82rem;
+}
+
+.current-marker {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  animation: markerPulse 1.5s infinite;
+}
+
+@keyframes markerPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── Frame Timeline ───────────────────────────────────────────────────── */
+.frame-timeline {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.frame-item {
+  flex-shrink: 0;
+  width: 80px;
+  padding: 10px 8px;
+  border-radius: 10px;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.frame-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.frame-mature {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.frame-almost {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.frame-developing {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.frame-immature {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.frame-number {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.frame-score {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin: 4px 0;
+}
+
+.frame-stage {
+  font-size: 0.68rem;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.frame-time {
+  font-size: 0.65rem;
+  color: var(--color-text-muted, #94a3b8);
+  margin-top: 2px;
+}
+
+/* ── Maturity List ────────────────────────────────────────────────────── */
+.maturity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.maturity-list li {
+  position: relative;
+  padding: 8px 0 8px 20px;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.maturity-list li:last-child {
+  border-bottom: none;
+}
+
+.maturity-list li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--color-primary);
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* ── Maturity Result Card ─────────────────────────────────────────────── */
+.maturity-result {
+  animation: fadeSlideUp 0.5s ease-out;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .maturity-verdict-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .verdict-text h2 {
+    font-size: 1.3rem;
+  }
+
+  .maturity-metrics-row {
+    flex-direction: column;
+  }
+
+  .maturity-gauge-card {
+    margin: 0 auto;
+  }
+
+  .maturity-stats-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .frame-timeline {
+    gap: 6px;
+  }
+
+  .frame-item {
+    width: 70px;
+  }
+
+  .color-stages-bar {
+    flex-direction: column;
+  }
 }

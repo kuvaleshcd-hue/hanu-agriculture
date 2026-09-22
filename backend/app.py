@@ -19,6 +19,7 @@ from models.disease_detection import DiseaseDetector
 from models.demand_supply import DemandSupplyAnalyzer
 from models.profitability_calculator import ProfitabilityCalculator
 from models.weather_advisory import WeatherAdvisoryEngine
+from models.crop_maturity import CropMaturityAnalyzer
 
 app = Flask(__name__, static_folder='../frontend', static_url_path='')
 CORS(app)
@@ -33,6 +34,7 @@ disease_detector = DiseaseDetector()
 demand_supply_analyzer = DemandSupplyAnalyzer()
 profitability_calculator = ProfitabilityCalculator()
 weather_advisory_engine = WeatherAdvisoryEngine()
+crop_maturity_analyzer = CropMaturityAnalyzer()
 
 print("✅ All models initialized!")
 
@@ -60,7 +62,8 @@ def health_check():
             'disease_detection': 'ready',
             'demand_supply_analyzer': 'ready',
             'profitability_calculator': 'ready',
-            'weather_advisory': 'ready'
+            'weather_advisory': 'ready',
+            'crop_maturity': 'ready'
         }
     })
 
@@ -264,6 +267,56 @@ def detect_disease():
 def list_diseases():
     return jsonify({
         'diseases': disease_detector.get_all_diseases()
+    })
+
+
+# ── API: Crop Maturity / Harvest Readiness ────────────────────────────────
+@app.route('/api/analyze-maturity', methods=['POST'])
+def analyze_maturity():
+    try:
+        crop_type = request.form.get('crop_type', 'Rice')
+
+        if 'video' in request.files:
+            video_file = request.files['video']
+            filename = video_file.filename
+            video_data = video_file.read()
+            result = crop_maturity_analyzer.analyze_video(
+                video_data=video_data,
+                filename=filename,
+                crop_type=crop_type
+            )
+            result['input_type'] = 'video'
+        elif 'image' in request.files:
+            image_file = request.files['image']
+            filename = image_file.filename
+            image_data = image_file.read()
+            result = crop_maturity_analyzer.analyze_image(
+                image_data=image_data,
+                filename=filename,
+                crop_type=crop_type
+            )
+            result['input_type'] = 'image'
+        else:
+            # No file — simulate with given crop_type
+            result = crop_maturity_analyzer.analyze_video(
+                filename='demo_video.mp4',
+                crop_type=crop_type
+            )
+            result['input_type'] = 'demo'
+
+        return jsonify({
+            'success': True,
+            'result': result
+        })
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/maturity-crops', methods=['GET'])
+def maturity_crops():
+    return jsonify({
+        'crops': crop_maturity_analyzer.get_supported_crops()
     })
 
 

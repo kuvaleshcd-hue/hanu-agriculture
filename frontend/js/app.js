@@ -12,6 +12,7 @@ let marketMap = null;
 let riskTrendChart = null;
 let roiCostChart = null;
 let weatherTrendChart = null;
+let maturityFrameChart = null;
 
 // ── Translations ──────────────────────────────────────────────────────────
 const translations = {
@@ -26,6 +27,7 @@ const translations = {
     'demand-risk': 'Demand & Glut Risk',
     'roi-calculator': 'Crop ROI Calculator',
     'weather-advisory': 'Weather Advisory',
+    'crop-maturity': 'Harvest Readiness',
     nav_overview: 'Overview',
     nav_ai_modules: 'AI Modules',
     nav_services: 'Services',
@@ -41,6 +43,28 @@ const translations = {
     loading: 'Analyzing data...',
     error: 'Something went wrong. Please try again.',
     noData: 'Please fill in all fields.',
+    maturity_title: 'AI Crop Maturity Detection',
+    maturity_desc: 'Upload a video or image of your crop field. Our AI vision model analyzes plant color, texture, and growth indicators to determine if your crop is Ready to Harvest, Almost Ready, or Not Ready Yet.',
+    maturity_select_crop: 'Select Crop Type',
+    maturity_upload_title: 'Drop crop video or image here, or click to upload',
+    maturity_upload_desc: 'Video: MP4, MOV, AVI, WEBM (max 50MB)  •  Image: JPG, PNG, WEBP (max 10MB)',
+    maturity_analyze_btn: '🔍 Analyze Harvest Readiness',
+    maturity_clear_btn: '✕ Clear',
+    maturity_res_confidence: 'Confidence',
+    maturity_res_maturity: 'Maturity',
+    maturity_res_days: 'DAYS TO HARVEST',
+    maturity_res_frames: 'FRAMES ANALYZED',
+    maturity_res_moisture: 'OPTIMAL MOISTURE',
+    maturity_res_growth: 'TOTAL GROWTH CYCLE',
+    maturity_res_stage: 'Stage',
+    maturity_res_growth_stages: 'Crop Growth Stages',
+    maturity_res_frame_timeline: 'Frame-by-Frame Timeline',
+    maturity_res_indicators: 'Maturity Indicators',
+    maturity_res_recommendations: 'Harvest Recommendations',
+    maturity_res_current: '← Current',
+    verdict_ready: 'Ready to Harvest',
+    verdict_almost: 'Almost Ready',
+    verdict_not_ready: 'Not Ready Yet',
   },
   kn: {
     dashboard: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್',
@@ -53,6 +77,7 @@ const translations = {
     'demand-risk': 'ಬೇಡಿಕೆ ಮತ್ತು ಮಾರುಕಟ್ಟೆ ಅಪಾಯ',
     'roi-calculator': 'ಬೆಳೆ ಆರ್‌ಒಐ ಕ್ಯಾಲ್ಕುಲೇಟರ್',
     'weather-advisory': 'ಹವಾಮಾನ ಮಾರ್ಗದರ್ಶನ',
+    'crop-maturity': 'ಸುಗ್ಗಿ ಸಿದ್ಧತೆ ಪರಿಶೀಲನೆ',
     nav_overview: 'ಅವಲೋಕನ',
     nav_ai_modules: 'ಎಐ ಮಾಡ್ಯೂಲ್‌ಗಳು',
     nav_services: 'ಸೇವೆಗಳು',
@@ -68,6 +93,28 @@ const translations = {
     loading: 'ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ...',
     error: 'ಏನೋ ತಪ್ಪಾಗಿದೆ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.',
     noData: 'ದಯವಿಟ್ಟು ಎಲ್ಲಾ ಕ್ಷೇತ್ರಗಳನ್ನು ಭರ್ತಿ ಮಾಡಿ.',
+    maturity_title: 'ಎಐ ಸುಗ್ಗಿ ಸಿದ್ಧತೆ ಪರಿಶೀಲನೆ',
+    maturity_desc: 'ನಿಮ್ಮ ಬೆಳೆಯ ವೀಡಿಯೊ ಅಥವಾ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ. ನಮ್ಮ ಎಐ ಮಾದರಿಯು ಸಸ್ಯದ ಬಣ್ಣ, ವಿನ್ಯಾಸ ಮತ್ತು ಬೆಳವಣಿಗೆಯನ್ನು ವಿಶ್ಲೇಷಿಸಿ, ಬೆಳೆಯು ಕೊಯ್ಲಿಗೆ ಸಿದ್ಧವಾಗಿದೆಯೇ, ಬಹುತೇಕ ಸಿದ್ಧವಾಗಿದೆಯೇ ಅಥವಾ ಇನ್ನೂ ಸಿದ್ಧವಾಗಿಲ್ಲವೇ ಎಂಬುದನ್ನು ನಿರ್ಧರಿಸುತ್ತದೆ.',
+    maturity_select_crop: 'ಬೆಳೆಯ ಪ್ರಕಾರವನ್ನು ಆಯ್ಕೆಮಾಡಿ',
+    maturity_upload_title: 'ಬೆಳೆಯ ವೀಡಿಯೊ ಅಥವಾ ಚಿತ್ರವನ್ನು ಇಲ್ಲಿ ಬಿಡಿ, ಅಥವಾ ಅಪ್‌ಲೋಡ್ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ',
+    maturity_upload_desc: 'ವೀಡಿಯೊ: MP4, MOV, AVI, WEBM (ಗರಿಷ್ಠ 50MB)  •  ಚಿತ್ರ: JPG, PNG, WEBP (ಗರಿಷ್ಠ 10MB)',
+    maturity_analyze_btn: '🔍 ಸುಗ್ಗಿ ಸಿದ್ಧತೆಯನ್ನು ವಿಶ್ಲೇಷಿಸಿ',
+    maturity_clear_btn: '✕ ಅಳಿಸು',
+    maturity_res_confidence: 'ವಿಶ್ವಾಸಾರ್ಹತೆ',
+    maturity_res_maturity: 'ಪಕ್ವತೆ',
+    maturity_res_days: 'ಕೊಯ್ಲಿಗೆ ಉಳಿದಿರುವ ದಿನಗಳು',
+    maturity_res_frames: 'ವಿಶ್ಲೇಷಿಸಿದ ಫ್ರೇಮ್‌ಗಳು',
+    maturity_res_moisture: 'ಸೂಕ್ತ ತೇವಾಂಶ',
+    maturity_res_growth: 'ಒಟ್ಟು ಬೆಳವಣಿಗೆಯ ಚಕ್ರ',
+    maturity_res_stage: 'ಹಂತ',
+    maturity_res_growth_stages: 'ಬೆಳೆಯ ಬೆಳವಣಿಗೆಯ ಹಂತಗಳು',
+    maturity_res_frame_timeline: 'ಫ್ರೇಮ್ ಟೈಮ್‌ಲೈನ್',
+    maturity_res_indicators: 'ಪಕ್ವತೆಯ ಸೂಚಕಗಳು',
+    maturity_res_recommendations: 'ಕೊಯ್ಲು ಶಿಫಾರಸುಗಳು',
+    maturity_res_current: '← ಪ್ರಸ್ತುತ',
+    verdict_ready: 'ಕೊಯ್ಲಿಗೆ ಸಿದ್ಧವಾಗಿದೆ',
+    verdict_almost: 'ಬಹುತೇಕ ಸಿದ್ಧವಾಗಿದೆ',
+    verdict_not_ready: 'ಇನ್ನೂ ಸಿದ್ಧವಾಗಿಲ್ಲ',
   },
   hi: {
     dashboard: 'डैशबोर्ड',
@@ -80,6 +127,7 @@ const translations = {
     'demand-risk': 'मांग और बाज़ार जोखिम',
     'roi-calculator': 'फसल लाभ कैलकुलेटर',
     'weather-advisory': 'मौसम सलाह',
+    'crop-maturity': 'फसल कटाई तैयारी',
     nav_overview: 'अवलोकन',
     nav_ai_modules: 'एआई मॉड्यूल',
     nav_services: 'सेवाएं',
@@ -95,6 +143,28 @@ const translations = {
     loading: 'विश्लेषण कर रहे हैं...',
     error: 'कुछ गलत हो गया। कृपया पुन: प्रयास करें।',
     noData: 'कृपया सभी फ़ील्ड भरें।',
+    maturity_title: 'एआई फसल कटाई तैयारी पहचान',
+    maturity_desc: 'अपनी फसल का वीडियो या छवि अपलोड करें। हमारा एआई मॉडल पौधे के रंग और विकास का विश्लेषण करके यह निर्धारित करता है कि आपकी फसल कटाई के लिए तैयार है, लगभग तैयार है, या अभी तैयार नहीं है।',
+    maturity_select_crop: 'फसल का प्रकार चुनें',
+    maturity_upload_title: 'फसल का वीडियो या छवि यहां छोड़ें, या अपलोड करने के लिए क्लिक करें',
+    maturity_upload_desc: 'वीडियो: MP4, MOV, AVI, WEBM (अधिकतम 50MB)  •  छवि: JPG, PNG, WEBP (अधिकतम 10MB)',
+    maturity_analyze_btn: '🔍 फसल कटाई की तैयारी का विश्लेषण करें',
+    maturity_clear_btn: '✕ साफ़ करें',
+    maturity_res_confidence: 'विश्वास',
+    maturity_res_maturity: 'परिपक्वता',
+    maturity_res_days: 'कटाई में शेष दिन',
+    maturity_res_frames: 'विश्लेषित फ्रेम',
+    maturity_res_moisture: 'इष्टतम नमी',
+    maturity_res_growth: 'कुल विकास चक्र',
+    maturity_res_stage: 'चरण',
+    maturity_res_growth_stages: 'फसल विकास के चरण',
+    maturity_res_frame_timeline: 'फ्रेम टाइमलाइन',
+    maturity_res_indicators: 'परिपक्वता संकेतक',
+    maturity_res_recommendations: 'कटाई की सिफारिशें',
+    maturity_res_current: '← वर्तमान',
+    verdict_ready: 'कटाई के लिए तैयार',
+    verdict_almost: 'लगभग तैयार',
+    verdict_not_ready: 'अभी तैयार नहीं',
   }
 };
 
@@ -129,6 +199,7 @@ function navigateTo(page) {
   if (page === 'demand-risk') fetchDemandRisk();
   if (page === 'roi-calculator') calculateROI();
   if (page === 'weather-advisory') loadWeatherAdvisory();
+  if (page === 'crop-maturity') initMaturityPage();
   
   // Scroll to top
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1594,5 +1665,378 @@ async function loadWeatherAdvisory(state) {
   } catch (err) {
     console.error('Weather advisory error:', err);
   }
+}
+
+
+// ── Crop Maturity / Harvest Readiness ─────────────────────────────────────
+let maturityUploadedFile = null;
+let maturityFileType = null; // 'video' or 'image'
+
+function initMaturityPage() {
+  // Set up drag-and-drop for maturity upload zone
+  const zone = document.getElementById('maturityUploadZone');
+  if (zone && !zone._maturityDnD) {
+    zone._maturityDnD = true;
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('dragover');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        const input = document.getElementById('maturityFileInput');
+        const dt = new DataTransfer();
+        dt.items.add(file);
+        input.files = dt.files;
+        handleMaturityUpload({ target: input });
+      }
+    });
+  }
+}
+
+function handleMaturityUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const isVideo = file.type.startsWith('video/');
+  const isImage = file.type.startsWith('image/');
+
+  if (!isVideo && !isImage) {
+    showToast('Please upload a video or image file.', 'error');
+    return;
+  }
+
+  if (isVideo && file.size > 50 * 1024 * 1024) {
+    showToast('Video too large. Maximum size is 50MB.', 'error');
+    return;
+  }
+  if (isImage && file.size > 10 * 1024 * 1024) {
+    showToast('Image too large. Maximum size is 10MB.', 'error');
+    return;
+  }
+
+  maturityUploadedFile = file;
+  maturityFileType = isVideo ? 'video' : 'image';
+
+  const previewContainer = document.getElementById('maturityPreviewContainer');
+  const videoPreview = document.getElementById('maturityVideoPreview');
+  const imagePreview = document.getElementById('maturityImagePreview');
+
+  // Reset
+  videoPreview.style.display = 'none';
+  imagePreview.style.display = 'none';
+  previewContainer.style.display = 'block';
+
+  if (isVideo) {
+    const url = URL.createObjectURL(file);
+    videoPreview.src = url;
+    videoPreview.style.display = 'block';
+    showToast('Video loaded! Click Analyze to check harvest readiness.', 'info');
+  } else {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      imagePreview.src = e.target.result;
+      imagePreview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+    showToast('Image loaded! Click Analyze to check harvest readiness.', 'info');
+  }
+
+  document.getElementById('maturityActions').style.display = 'flex';
+  document.getElementById('maturityResult').classList.add('hidden');
+}
+
+function clearMaturityUpload() {
+  maturityUploadedFile = null;
+  maturityFileType = null;
+  document.getElementById('maturityFileInput').value = '';
+  document.getElementById('maturityPreviewContainer').style.display = 'none';
+  document.getElementById('maturityVideoPreview').style.display = 'none';
+  document.getElementById('maturityImagePreview').style.display = 'none';
+  document.getElementById('maturityActions').style.display = 'none';
+  document.getElementById('maturityResult').classList.add('hidden');
+}
+
+async function analyzeMaturity() {
+  const cropType = document.getElementById('maturityCropType').value;
+
+  showLoading('🎥 Analyzing crop maturity with AI vision model...');
+
+  try {
+    const formData = new FormData();
+    formData.append('crop_type', cropType);
+
+    if (maturityUploadedFile) {
+      if (maturityFileType === 'video') {
+        formData.append('video', maturityUploadedFile);
+      } else {
+        formData.append('image', maturityUploadedFile);
+      }
+    }
+
+    const response = await fetch(`${API_BASE}/analyze-maturity`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      renderMaturityResult(data.result);
+      showToast('Harvest readiness analysis complete!', 'success');
+    } else {
+      showToast(data.error || 'Analysis failed.', 'error');
+    }
+  } catch (error) {
+    showToast(`Error: ${error.message}`, 'error');
+  } finally {
+    hideLoading();
+  }
+}
+
+function renderMaturityResult(result) {
+  const container = document.getElementById('maturityResult');
+  container.classList.remove('hidden');
+
+  // Verdict styling
+  let verdictClass, verdictIcon, verdictGlow;
+  if (result.verdict_code === 'ready') {
+    verdictClass = 'maturity-ready';
+    verdictIcon = '✅';
+    verdictGlow = '#10b981';
+  } else if (result.verdict_code === 'almost') {
+    verdictClass = 'maturity-almost';
+    verdictIcon = '⏳';
+    verdictGlow = '#f59e0b';
+  } else {
+    verdictClass = 'maturity-not-ready';
+    verdictIcon = '❌';
+    verdictGlow = '#ef4444';
+  }
+
+  // Build maturity ring percent for CSS
+  const maturityPct = result.overall_maturity;
+  const circumference = 2 * Math.PI * 54; // r=54
+  const offset = circumference - (maturityPct / 100) * circumference;
+
+  // Frame timeline HTML
+  const frameTimelineHTML = result.frame_analysis.map(frame => {
+    let frameClass = 'frame-immature';
+    if (frame.maturity_score >= 80) frameClass = 'frame-mature';
+    else if (frame.maturity_score >= 55) frameClass = 'frame-almost';
+    else if (frame.maturity_score >= 30) frameClass = 'frame-developing';
+    return `
+      <div class="frame-item ${frameClass}">
+        <div class="frame-number">F${frame.frame_number}</div>
+        <div class="frame-score">${frame.maturity_score}%</div>
+        <div class="frame-stage">${frame.stage}</div>
+        <div class="frame-time">${frame.timestamp_sec}s</div>
+      </div>
+    `;
+  }).join('');
+
+  // Indicators HTML
+  const indicatorsHTML = result.indicators.map(ind =>
+    `<li>${ind}</li>`
+  ).join('');
+
+  // Recommendations HTML
+  const recommendationsHTML = result.recommendations.map(rec =>
+    `<li>${rec}</li>`
+  ).join('');
+
+  // Color stages HTML
+  const colorStagesHTML = Object.entries(result.color_stages).map(([color, stage]) => {
+    const isCurrentStage = stage === result.current_stage;
+    return `<div class="color-stage-item ${isCurrentStage ? 'current-stage' : ''}">
+      <div class="color-stage-dot" style="background: ${getStageColor(color)};"></div>
+      <span class="color-stage-label">${color}</span>
+      <span class="color-stage-name">${stage}</span>
+      ${isCurrentStage ? '<span class="current-marker">← Current</span>' : ''}
+    </div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="result-card maturity-result">
+      <!-- Verdict Banner -->
+      <div class="maturity-verdict-banner ${verdictClass}">
+        <div class="verdict-icon">${verdictIcon}</div>
+        <div class="verdict-text">
+          <h2>${result.verdict}</h2>
+          <p>${result.crop_type} — ${result.current_stage} Stage</p>
+        </div>
+        <div class="verdict-confidence">
+          <span class="conf-value">${result.confidence}%</span>
+          <span class="conf-label">Confidence</span>
+        </div>
+      </div>
+
+      <!-- Metrics Row -->
+      <div class="maturity-metrics-row">
+        <!-- Maturity Gauge -->
+        <div class="maturity-gauge-card">
+          <svg class="maturity-ring" viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="54" />
+            <circle class="ring-fill ${verdictClass}-ring" cx="60" cy="60" r="54"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${offset}"
+              style="--target-offset: ${offset}" />
+          </svg>
+          <div class="gauge-center-text">
+            <span class="gauge-value">${maturityPct}%</span>
+            <span class="gauge-label">Maturity</span>
+          </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="maturity-stats-grid">
+          <div class="maturity-stat">
+            <span class="stat-emoji">📅</span>
+            <span class="stat-val">${result.days_remaining}</span>
+            <span class="stat-lbl">Days to Harvest</span>
+          </div>
+          <div class="maturity-stat">
+            <span class="stat-emoji">🎞️</span>
+            <span class="stat-val">${result.frames_analyzed}</span>
+            <span class="stat-lbl">Frames Analyzed</span>
+          </div>
+          <div class="maturity-stat">
+            <span class="stat-emoji">💧</span>
+            <span class="stat-val">${result.optimal_moisture}</span>
+            <span class="stat-lbl">Optimal Moisture</span>
+          </div>
+          <div class="maturity-stat">
+            <span class="stat-emoji">🌱</span>
+            <span class="stat-val">${result.total_growth_days}d</span>
+            <span class="stat-lbl">Total Growth Cycle</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Growth Stages Bar -->
+      <div class="glass-card" style="margin-top: 16px;">
+        <h3 style="font-size: 1.05rem; margin-bottom: 14px;">🌿 Growth Stage Progress</h3>
+        <div class="color-stages-bar">
+          ${colorStagesHTML}
+        </div>
+      </div>
+
+      <!-- Frame-by-Frame Timeline -->
+      <div class="glass-card" style="margin-top: 16px;">
+        <h3 style="font-size: 1.05rem; margin-bottom: 14px;">🎞️ Frame-by-Frame Analysis</h3>
+        <div class="frame-timeline">
+          ${frameTimelineHTML}
+        </div>
+        <div style="margin-top: 16px; height: 200px;">
+          <canvas id="maturityFrameChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Indicators & Recommendations -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;" class="form-grid">
+        <div class="glass-card" style="border-left: 4px solid ${verdictGlow};">
+          <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: ${verdictGlow};">🔍 Maturity Indicators</h4>
+          <ul class="maturity-list">
+            ${indicatorsHTML}
+          </ul>
+        </div>
+        <div class="glass-card" style="border-left: 4px solid #3b82f6;">
+          <h4 style="font-size: 0.95rem; margin-bottom: 10px; color: #3b82f6;">📋 Harvest Recommendations</h4>
+          <ul class="maturity-list">
+            ${recommendationsHTML}
+          </ul>
+        </div>
+      </div>
+
+      <!-- Input Info -->
+      <div class="glass-card" style="margin-top: 16px; text-align: center;">
+        <p style="color: var(--color-text-muted); font-size: 0.82rem;">
+          Analysis Type: ${result.input_type === 'video' ? '🎥 Video' : (result.input_type === 'image' ? '📸 Image' : '🔄 Demo')} &nbsp;•&nbsp;
+          Crop: ${result.crop_type} &nbsp;•&nbsp;
+          ${result.frames_analyzed} frame${result.frames_analyzed > 1 ? 's' : ''} analyzed
+        </p>
+      </div>
+    </div>
+  `;
+
+  // Render frame maturity chart
+  renderMaturityFrameChart(result.frame_analysis);
+}
+
+function renderMaturityFrameChart(frames) {
+  const canvas = document.getElementById('maturityFrameChart');
+  if (!canvas) return;
+
+  if (maturityFrameChart) {
+    maturityFrameChart.destroy();
+    maturityFrameChart = null;
+  }
+
+  const labels = frames.map(f => `F${f.frame_number} (${f.timestamp_sec}s)`);
+  const scores = frames.map(f => f.maturity_score);
+  const colors = scores.map(s => {
+    if (s >= 80) return '#10b981';
+    if (s >= 55) return '#f59e0b';
+    if (s >= 30) return '#3b82f6';
+    return '#ef4444';
+  });
+
+  maturityFrameChart = new Chart(canvas, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Maturity Score (%)',
+        data: scores,
+        backgroundColor: colors.map(c => c + '88'),
+        borderColor: colors,
+        borderWidth: 2,
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            afterLabel: function(ctx) {
+              const frame = frames[ctx.dataIndex];
+              return `Stage: ${frame.stage}\nColor: ${frame.dominant_color}`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: { ticks: { color: '#94a3b8', font: { size: 10 } }, grid: { display: false } },
+        y: {
+          min: 0, max: 100,
+          ticks: { color: '#94a3b8', callback: v => v + '%' },
+          grid: { color: 'rgba(148,163,184,0.1)' }
+        }
+      }
+    }
+  });
+}
+
+function getStageColor(colorName) {
+  const map = {
+    'green': '#22c55e',
+    'dark green': '#15803d',
+    'yellow-green': '#a3e635',
+    'yellow': '#eab308',
+    'golden': '#f59e0b',
+    'golden-yellow': '#f59e0b',
+    'orange': '#f97316',
+    'red': '#ef4444',
+    'brown': '#92400e',
+    'white': '#f1f5f9',
+    'light green': '#86efac'
+  };
+  return map[colorName.toLowerCase()] || '#94a3b8';
 }
 

@@ -40,7 +40,7 @@
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <a href="#" class="sidebar-logo" onclick="navigateTo('dashboard')">
-        <img src="assets/hanu_logo.png" alt="Hanu Agri" style="height: 44px; width: 44px; object-fit: contain; border-radius: 50%; background: white;">
+        <img src="assets/hanu_logo.jpg" alt="Hanu Agri" style="height: 44px; width: 44px; object-fit: contain; border-radius: 50%; background: white;">
         <div class="logo-text">
           <h1>Hanu Agri</h1>
           <span>Demand Prediction</span>
@@ -84,6 +84,10 @@
         <span class="nav-icon">🌤️</span>
         <span data-i18n="weather-advisory">Weather Advisory</span>
       </a>
+      <a class="nav-item" data-page="crop-maturity" onclick="navigateTo('crop-maturity')">
+        <span class="nav-icon">🎥</span>
+        <span data-i18n="crop-maturity">Harvest Readiness</span>
+      </a>
       
       <div class="nav-section-title" data-i18n="nav_services">Services</div>
       <a class="nav-item" data-page="market" onclick="navigateTo('market')">
@@ -120,6 +124,7 @@
           <div class="status-dot"></div>
           <span data-i18n="status_active">AI Models Active</span>
         </div>
+        <img src="assets/profile_pic.jpg" alt="User Profile" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-primary); cursor: pointer; margin-left: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
       </div>
     </header>
     
@@ -420,6 +425,67 @@
         </div>
         
         <div id="diseaseResult" class="hidden"></div>
+      </section>
+      
+      
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <!-- CROP MATURITY / HARVEST READINESS -->
+      <!-- ═══════════════════════════════════════════════════════════════ -->
+      <section class="page-section" id="page-crop-maturity">
+        <div class="section-header">
+          <h2><span>🎥</span> <span data-i18n="maturity_title">AI Crop Maturity Detection</span></h2>
+          <button class="back-btn" onclick="navigateTo('dashboard')">← Back</button>
+        </div>
+        
+        <div class="glass-card">
+          <p style="color: var(--color-text-secondary); margin-bottom: 20px; font-size: 0.9rem;" data-i18n="maturity_desc">
+            Upload a video or image of your crop field. Our AI vision model analyzes plant color, texture, and growth indicators to determine if your crop is Ready to Harvest, Almost Ready, or Not Ready Yet.
+          </p>
+          
+          <!-- Crop Type Selector -->
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label for="maturityCropType" style="font-weight: 600; font-size: 0.92rem; margin-bottom: 8px; display: block;" data-i18n="maturity_select_crop">Select Crop Type</label>
+            <select id="maturityCropType" class="form-select" style="width: 100%; max-width: 320px;">
+              <option value="Rice">🌾 Rice</option>
+              <option value="Wheat">🌾 Wheat</option>
+              <option value="Maize">🌽 Maize</option>
+              <option value="Cotton">☁️ Cotton</option>
+              <option value="Sugarcane">🎋 Sugarcane</option>
+              <option value="Tomato">🍅 Tomato</option>
+              <option value="Banana">🍌 Banana</option>
+              <option value="Mango">🥭 Mango</option>
+              <option value="Groundnut">🥜 Groundnut</option>
+              <option value="Onion">🧅 Onion</option>
+            </select>
+          </div>
+          
+          <!-- Video Upload Zone -->
+          <div class="upload-zone maturity-upload-zone" id="maturityUploadZone">
+            <span class="upload-icon">🎥</span>
+            <h3 data-i18n="maturity_upload_title">Drop crop video or image here, or click to upload</h3>
+            <p data-i18n="maturity_upload_desc">Video: MP4, MOV, AVI, WEBM (max 50MB) &nbsp;•&nbsp; Image: JPG, PNG, WEBP (max 10MB)</p>
+            <input type="file" id="maturityFileInput" accept="video/*,image/*" onchange="handleMaturityUpload(event)">
+          </div>
+          
+          <!-- Video / Image Preview -->
+          <div id="maturityPreviewContainer" style="display: none; margin-top: 16px;">
+            <video id="maturityVideoPreview" class="maturity-video-preview" controls style="display: none;"></video>
+            <img id="maturityImagePreview" class="image-preview" alt="Crop preview" style="display: none;">
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="btn-group" id="maturityActions" style="display: none;">
+            <button class="btn-primary" onclick="analyzeMaturity()">
+              <span data-i18n="maturity_analyze_btn">🔍 Analyze Harvest Readiness</span>
+            </button>
+            <button class="btn-secondary" onclick="clearMaturityUpload()">
+              <span data-i18n="maturity_clear_btn">✕ Clear</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Results Container -->
+        <div id="maturityResult" class="hidden"></div>
       </section>
       
       
