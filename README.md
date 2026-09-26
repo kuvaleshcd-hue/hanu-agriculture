@@ -47,3 +47,42 @@ Follow these instructions to set up the project on your local machine.
    ```bash
    git clone https://github.com/kuvaleshcd-hue/hanu-agriculture.git
    cd hanu-agriculture
+   ```
+
+2. **Set up a virtual environment (optional but recommended):**
+   ```bash
+   python -m venv venv
+   # On Windows
+   venv\Scripts\activate
+   # On macOS/Linux
+   source venv/bin/activate
+   ```
+
+3. **Install backend dependencies:**
+   ```bash
+   cd backend
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Flask backend server:**
+   ```bash
+   python app.py
+   ```
+
+5. **Access the application:**
+   Open your web browser and navigate to `http://127.0.0.1:5000/`. The backend is configured to serve the frontend files automatically.
+
+## 📄 Documentation
+
+The repository includes detailed project reports in the root directory:
+- `Agricultural_AI_Project_Report.pdf`
+- `Agricultural_AI_System_Architecture_and_Algorithms.pdf`
+- `Hanu_Agri_Official_40_Page_Project_Report.pdf`
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📜 License
+
+This project is licensed under the MIT License.
