@@ -2041,3 +2041,13 @@ function getStageColor(colorName) {
   return map[colorName.toLowerCase()] || '#94a3b8';
 }
 
+
+// Load user profile image on dashboard load
+document.addEventListener('DOMContentLoaded', () => {
+  const dp = document.getElementById('dashboardProfilePic');
+  const savedImage = localStorage.getItem('userProfileImage');
+  if (dp && savedImage) {
+    dp.src = savedImage;
+  }
+});
+

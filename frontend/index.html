@@ -42,15 +42,26 @@
     }
 
     .auth-logo {
-      width: 64px;
-      height: 64px;
+      width: 80px;
+      height: 80px;
       margin: 0 auto 12px;
       border-radius: 50%;
-      object-fit: contain;
+      object-fit: cover;
       background: white;
       padding: 4px;
       box-shadow: var(--shadow-md);
-      border: 2px solid var(--color-primary-light);
+      border: 3px solid var(--color-primary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      position: relative;
+    }
+    
+    .auth-logo:hover {
+      opacity: 0.8;
+    }
+
+    #profileImageInput {
+      display: none;
     }
 
     .auth-container h2 {
@@ -157,7 +168,12 @@
 <body>
 
 <div class="auth-container">
-  <img src="assets/hanu_logo.jpg" alt="Hanu Agri Logo" class="auth-logo" onerror="this.src='https://placehold.co/64x64/eab308/white?text=HA'">
+  <div style="text-align: center;">
+    <label for="profileImageInput" title="Click to upload profile photo">
+      <img src="assets/hanu_logo.jpg" alt="Upload Profile Photo" class="auth-logo" id="profilePreview" onerror="this.src='https://placehold.co/80x80/eab308/white?text=HA'">
+    </label>
+    <input type="file" id="profileImageInput" accept="image/*">
+  </div>
   <h2>Create an Account</h2>
   <p>Join Hanu Agri to empower your farming decisions</p>
 
@@ -201,8 +217,37 @@
 
   <div class="auth-footer">
     Already have an account? <a href="login.html">Sign In</a>
-  </div>
 </div>
+
+<script>
+  // Handle profile image upload preview
+  const profileImageInput = document.getElementById('profileImageInput');
+  const profilePreview = document.getElementById('profilePreview');
+
+  profileImageInput.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        profilePreview.src = event.target.result;
+        // Optionally save to localStorage so dashboard can use it
+        localStorage.setItem('userProfileImage', event.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+
+  document.querySelector('.auth-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Save user info
+    const firstName = document.getElementById('firstName').value;
+    const lastName = document.getElementById('lastName').value;
+    localStorage.setItem('userName', `${firstName} ${lastName}`);
+    
+    window.location.href = 'login.html';
+  });
+</script>
 
 </body>
 </html>
