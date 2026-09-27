@@ -55,26 +55,52 @@
     }
     
     .auth-logo {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 12px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: white;
+      padding: 4px;
+      box-shadow: var(--shadow-md);
+      border: 2px solid var(--color-primary-light);
+    }
+    
+    .profile-upload-field {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .profile-pic-container {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    
+    .profile-pic-preview {
       width: 100%;
       height: 100%;
       border-radius: 50%;
       object-fit: cover;
       background: white;
-      padding: 4px;
-      box-shadow: var(--shadow-md);
-      border: 3px solid var(--color-primary);
+      box-shadow: var(--shadow-sm);
+      border: 2px solid var(--color-primary);
       transition: all var(--transition-fast);
       margin: 0;
     }
     
     .upload-overlay {
       position: absolute;
-      bottom: 0;
-      right: 0;
+      bottom: -4px;
+      right: -4px;
       background: var(--color-primary);
       color: white;
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -85,16 +111,22 @@
     }
     
     .upload-overlay svg {
-      width: 14px;
-      height: 14px;
+      width: 12px;
+      height: 12px;
     }
     
-    .profile-pic-container:hover .auth-logo {
+    .profile-pic-container:hover .profile-pic-preview {
       opacity: 0.8;
     }
     
     .profile-pic-container:hover .upload-overlay {
       transform: scale(1.1);
+    }
+
+    .profile-upload-text {
+      flex: 1;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
     }
 
     #profileImageInput {
@@ -205,21 +237,29 @@
 <body>
 
 <div class="auth-container">
-  <div class="profile-upload-wrapper">
-    <label for="profileImageInput" title="Click to upload profile photo">
-      <div class="profile-pic-container">
-        <img src="https://ui-avatars.com/api/?name=User&background=f3f4f6&color=9ca3af&size=128" alt="Upload Profile Photo" class="auth-logo" id="profilePreview">
-        <div class="upload-overlay">
-          <svg fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>
-        </div>
-      </div>
-    </label>
-    <input type="file" id="profileImageInput" accept="image/*">
-  </div>
+  <img src="assets/hanu_logo.jpg" alt="Hanu Agri Logo" class="auth-logo" onerror="this.src='https://placehold.co/64x64/eab308/white?text=HA'">
   <h2>Create an Account</h2>
   <p>Join Hanu Agri to empower your farming decisions</p>
 
   <form class="auth-form" onsubmit="event.preventDefault(); window.location.href='login.html';">
+    <div class="form-group">
+      <label>Profile Photo (Optional)</label>
+      <div class="profile-upload-field">
+        <label for="profileImageInput" title="Click to upload profile photo">
+          <div class="profile-pic-container">
+            <img src="https://ui-avatars.com/api/?name=User&background=f3f4f6&color=9ca3af&size=128" alt="Upload Profile Photo" class="profile-pic-preview" id="profilePreview">
+            <div class="upload-overlay">
+              <svg fill="currentColor" viewBox="0 0 24 24"><path d="M4 4h3l2-2h6l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zm8 3a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"></path></svg>
+            </div>
+          </div>
+        </label>
+        <div class="profile-upload-text">
+          Click the icon to choose a profile picture.
+        </div>
+        <input type="file" id="profileImageInput" accept="image/*">
+      </div>
+    </div>
+
     <div class="form-row">
       <div class="form-group">
         <label for="firstName">First Name</label>
