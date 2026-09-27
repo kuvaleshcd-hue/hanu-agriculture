@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Login to Hanu Agri - AI-powered Agricultural Demand Prediction System">
+  <title>Login - Hanu Agri</title>
+  
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Auth Specific Styles */
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(rgba(255, 255, 255, 0.85), rgba(248, 250, 252, 0.95)), url('assets/bg_landscape.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    
+    .auth-container {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 40px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,0.6);
+      border: 1px solid rgba(234, 179, 8, 0.2);
+      text-align: center;
+      position: relative;
+      z-index: 10;
+      animation: slideUp 0.5s var(--transition-slow);
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-logo {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 16px;
+      border-radius: 50%;
+      object-fit: contain;
+      background: white;
+      padding: 4px;
+      box-shadow: var(--shadow-md);
+      border: 2px solid var(--color-primary-light);
+    }
+
+    .auth-container h2 {
+      font-family: var(--font-heading);
+      font-size: 1.75rem;
+      color: var(--color-text-primary);
+      margin-bottom: 8px;
+    }
+
+    .auth-container p {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 32px;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--color-text-secondary);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(0,0,0,0.1);
+      border-radius: var(--radius-md);
+      background: var(--color-bg-input);
+      font-family: var(--font-body);
+      font-size: 1rem;
+      color: var(--color-text-primary);
+      transition: var(--transition-normal);
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background: white;
+      box-shadow: 0 0 0 3px rgba(234, 179, 8, 0.15);
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gradient-primary);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-normal);
+      box-shadow: var(--shadow-md);
+      margin-top: 8px;
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%);
+    }
+
+    .auth-footer {
+      margin-top: 24px;
+      font-size: 0.9rem;
+      color: var(--color-text-secondary);
+    }
+
+    .auth-footer a {
+      color: var(--color-primary-dark);
+      text-decoration: none;
+      font-weight: 600;
+      transition: var(--transition-fast);
+    }
+
+    .auth-footer a:hover {
+      color: var(--color-emerald-700);
+      text-decoration: underline;
+    }
+
+    .forgot-password {
+      text-align: right;
+      font-size: 0.85rem;
+      margin-top: -12px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-container">
+  <img src="assets/hanu_logo.jpg" alt="Hanu Agri Logo" class="auth-logo" onerror="this.src='https://placehold.co/72x72/eab308/white?text=HA'">
+  <h2>Welcome Back</h2>
+  <p>Sign in to access AI agricultural insights</p>
+
+  <form class="auth-form" onsubmit="event.preventDefault(); window.location.href='index.html';">
+    <div class="form-group">
+      <label for="email">Email or Phone Number</label>
+      <input type="text" id="email" name="email" placeholder="Enter your email or phone" required>
+    </div>
+    
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required>
+    </div>
+
+    <div class="forgot-password">
+      <a href="#">Forgot Password?</a>
+    </div>
+
+    <button type="submit" class="auth-btn">Sign In</button>
+  </form>
+
+  <div class="auth-footer">
+    Don't have an account? <a href="register.html">Create Account</a>
+  </div>
+</div>
+
+</body>
+</html>
