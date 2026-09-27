@@ -42,7 +42,7 @@ print("✅ All models initialized!")
 # ── Serve Frontend ────────────────────────────────────────────────────────────
 @app.route('/')
 def serve_index():
-    return send_from_directory(app.static_folder, 'register.html')
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route('/<path:path>')
