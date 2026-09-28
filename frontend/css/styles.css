@@ -2200,27 +2200,3 @@ body::before {
     flex-direction: column;
   }
 }
-
-/* Voice AI Assistant Mic Pulsing Animation */
-.mic-pulsing {
-  animation: mic-pulse 1.5s infinite;
-  border-radius: 50%;
-  background-color: rgba(255, 0, 0, 0.1) !important;
-}
-
-@keyframes mic-pulse {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
-  }
-  
-  70% {
-    transform: scale(1.1);
-    box-shadow: 0 0 0 10px rgba(255, 0, 0, 0);
-  }
-  
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(255, 0, 0, 0);
-  }
-}

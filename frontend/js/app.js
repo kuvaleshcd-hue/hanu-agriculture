@@ -1092,8 +1092,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 
 let voiceEnabled = false;
-let recognition = null;
-let isRecording = false;
 
 function toggleVoice() {
   voiceEnabled = !voiceEnabled;
@@ -1125,23 +1123,10 @@ function speakText(text) {
   
   utterance.lang = langMap[currentLang] || 'en-IN';
   
-  // Attempt to pick a more natural Google voice or matching lang voice
-  const voices = window.speechSynthesis.getVoices();
-  const preferredVoice = voices.find(v => v.lang.includes(utterance.lang) && v.name.includes('Google'))
-                      || voices.find(v => v.lang.includes(utterance.lang));
-  if (preferredVoice) {
-    utterance.voice = preferredVoice;
-  }
-  
   // Adjust speaking rate
   utterance.rate = 1.0;
   
   window.speechSynthesis.speak(utterance);
-}
-
-// Ensure voices are loaded for better selection
-if (window.speechSynthesis) {
-  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 }
 
 function toggleChatbot() {
@@ -1167,14 +1152,8 @@ function toggleChatbot() {
 
 function startDictation() {
   if (window.hasOwnProperty('SpeechRecognition') || window.hasOwnProperty('webkitSpeechRecognition')) {
-    if (isRecording && recognition) {
-      // If already recording, stop it
-      recognition.stop();
-      return;
-    }
-
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognition = new SpeechRecognition();
+    const recognition = new SpeechRecognition();
     
     // Set language mapping based on current app language
     const langMap = {
@@ -1183,53 +1162,25 @@ function startDictation() {
       'kn': 'kn-IN'
     };
     recognition.lang = langMap[currentLang] || 'en-IN';
-    recognition.continuous = true;
-    recognition.interimResults = true;
+    recognition.continuous = false;
+    recognition.interimResults = false;
     
     const micBtn = document.getElementById('micBtn');
-    const input = document.getElementById('chatbotInput');
-    
     micBtn.style.color = 'red'; // visual indicator for recording
-    micBtn.classList.add('mic-pulsing');
-    isRecording = true;
-    
-    let finalTranscript = '';
     
     recognition.onresult = function(e) {
-      let interimTranscript = '';
-      for (let i = e.resultIndex; i < e.results.length; ++i) {
-        if (e.results[i].isFinal) {
-          finalTranscript += e.results[i][0].transcript;
-        } else {
-          interimTranscript += e.results[i][0].transcript;
-        }
-      }
-      input.value = finalTranscript + interimTranscript;
+      document.getElementById('chatbotInput').value = e.results[0][0].transcript;
+      recognition.stop();
+      micBtn.style.color = 'var(--color-primary-dark)';
+      sendChatMessage(); // Automatically send after transcription
     };
     
     recognition.onerror = function(e) {
       recognition.stop();
       micBtn.style.color = 'var(--color-primary-dark)';
-      micBtn.classList.remove('mic-pulsing');
-      isRecording = false;
       console.error('Speech recognition error', e.error);
-      if (e.error !== 'no-speech') {
-          showToast("Microphone error: " + e.error, "error");
-      }
     };
     
-    recognition.onend = function() {
-      micBtn.style.color = 'var(--color-primary-dark)';
-      micBtn.classList.remove('mic-pulsing');
-      isRecording = false;
-      
-      // Automatically send if there's text
-      if (input.value.trim() !== '') {
-        sendChatMessage();
-      }
-    };
-    
-    input.placeholder = "Listening...";
     recognition.start();
   } else {
     showToast("Your browser does not support Speech Recognition.", "error");
@@ -1238,11 +1189,7 @@ function startDictation() {
 
 function handleChatInput(event) {
   if (event.key === 'Enter') {
-    if (isRecording && recognition) {
-      recognition.stop();
-    } else {
-      sendChatMessage();
-    }
+    sendChatMessage();
   }
 }
 
