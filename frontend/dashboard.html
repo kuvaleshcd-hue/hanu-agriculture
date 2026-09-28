@@ -798,7 +798,10 @@
     <div class="chatbot-title">
       <span class="chat-icon">🤖</span> Hanu Agri Assistant
     </div>
-    <button class="chatbot-close" onclick="toggleChatbot()">✕</button>
+    <div>
+      <button class="chatbot-close" id="voiceToggle" onclick="toggleVoice()" style="margin-right: 5px;" title="Toggle Voice">🔇</button>
+      <button class="chatbot-close" onclick="toggleChatbot()">✕</button>
+    </div>
   </div>
   <div class="chatbot-messages" id="chatbotMessages">
     <!-- Messages will be appended here -->

@@ -1090,6 +1090,45 @@ document.addEventListener('DOMContentLoaded', () => {
 // ═══════════════════════════════════════════════════════════════════════════
 // CHATBOT ASSISTANT
 // ═══════════════════════════════════════════════════════════════════════════
+
+let voiceEnabled = false;
+
+function toggleVoice() {
+  voiceEnabled = !voiceEnabled;
+  const btn = document.getElementById('voiceToggle');
+  if (btn) {
+    btn.innerText = voiceEnabled ? '🔊' : '🔇';
+    btn.title = voiceEnabled ? 'Disable Voice' : 'Enable Voice';
+  }
+  
+  if (!voiceEnabled && window.speechSynthesis) {
+    window.speechSynthesis.cancel();
+  }
+}
+
+function speakText(text) {
+  if (!voiceEnabled || !window.speechSynthesis) return;
+  
+  // Cancel any ongoing speech
+  window.speechSynthesis.cancel();
+  
+  const utterance = new SpeechSynthesisUtterance(text);
+  
+  // Set language mapping based on current app language
+  const langMap = {
+    'en': 'en-IN',
+    'hi': 'hi-IN',
+    'kn': 'kn-IN'
+  };
+  
+  utterance.lang = langMap[currentLang] || 'en-IN';
+  
+  // Adjust speaking rate
+  utterance.rate = 1.0;
+  
+  window.speechSynthesis.speak(utterance);
+}
+
 function toggleChatbot() {
   const container = document.getElementById('chatbotContainer');
   container.classList.toggle('hidden');
@@ -1179,6 +1218,10 @@ async function sendChatMessage() {
 
 function renderBotResponse(response) {
   const { type, text, data } = response;
+  
+  if (text) {
+    speakText(text);
+  }
   
   if (type === 'text' || type === 'default') {
     appendMessage('bot', text);
