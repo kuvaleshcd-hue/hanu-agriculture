@@ -692,7 +692,8 @@ def chat():
         is_price_query = any(w in msg_lower for w in crop_price_words) or ('price' in msg_lower or 'rate' in msg_lower)
         commodity = match_commodity(message)
         
-        if commodity or is_price_query:
+        # Only trigger price intent if it's explicitly asking for price OR if it's a very short message (e.g. just "wheat")
+        if is_price_query or (commodity and len(message.split()) <= 2):
             if not commodity:
                 return jsonify({
                     'success': True,
@@ -745,6 +746,67 @@ def chat():
                 }
             })
             
+        # 6. DEMAND RISK INTENT
+        demand_risk_words = ['demand risk', 'glut risk', 'risk for', 'is there a demand', 'will there be demand', 'demand for']
+        if any(w in msg_lower for w in demand_risk_words):
+            commodity = match_commodity(message) or 'Rice'
+            state = match_state(message) or 'Karnataka'
+            result = demand_supply_analyzer.analyze_risk(crop=commodity, state=state)
+            
+            risk_level = result.get('risk_level', 'Unknown')
+            return jsonify({
+                'success': True,
+                'type': 'demand_risk',
+                'text': f"The current market demand risk for {commodity} in {state} is evaluated as: {risk_level.upper()}.",
+                'data': result
+            })
+            
+        # 7. ROI/PROFITABILITY INTENT
+        roi_words = ['roi', 'profit', 'profitability', 'how much money', 'revenue from', 'earnings from']
+        if any(w in msg_lower for w in roi_words):
+            commodity = match_commodity(message) or 'Rice'
+            
+            import re
+            acre_match = re.search(r'(\d+(?:\.\d+)?)\s*acre', msg_lower)
+            acres = float(acre_match.group(1)) if acre_match else 1.0
+            
+            result = profitability_calculator.calculate(crop=commodity, acres=acres)
+            
+            profit = result.get('net_profit', 0)
+            return jsonify({
+                'success': True,
+                'type': 'roi',
+                'text': f"Based on current data, the estimated net profit for growing {acres} acres of {commodity} is ₹{profit:,.2f}.",
+                'data': result
+            })
+            
+        # 8. CROP RECOMMENDATION INTENT
+        crop_rec_words = ['which crop', 'what crop', 'suggest a crop', 'recommend a crop', 'crop to grow']
+        if any(w in msg_lower for w in crop_rec_words):
+            return jsonify({
+                'success': True,
+                'type': 'text',
+                'text': "To recommend the best crop, I need exact measurements of your soil's Nitrogen (N), Phosphorus (P), Potassium (K), and environmental factors like Temperature and Rainfall. Please use the 'Crop Recommendation' dashboard module for an accurate AI prediction!"
+            })
+
+        # 9. DISEASE DETECTION INTENT
+        disease_words = ['disease', 'leaf', 'sick', 'brown spots', 'yellow leaves', 'rot', 'blight', 'infection', 'pest']
+        if any(w in msg_lower for w in disease_words):
+            return jsonify({
+                'success': True,
+                'type': 'text',
+                'text': "To diagnose a crop disease, I need to see it! Please go to the 'Disease Detection' module and upload a photo of the affected plant leaf."
+            })
+            
+        # 10. CROP MATURITY INTENT
+        maturity_words = ['maturity', 'harvest', 'ready to cut', 'ready to harvest', 'when to harvest']
+        if any(w in msg_lower for w in maturity_words):
+            return jsonify({
+                'success': True,
+                'type': 'text',
+                'text': "I can determine if your crop is ready for harvest using AI Vision! Please navigate to the 'Harvest Readiness' module and upload a short video or image of your field."
+            })
+
         return jsonify({
             'success': True,
             'type': 'default',
