@@ -812,9 +812,10 @@
     <button onclick="sendQuickReply('🌱 Fertilizer Recommendations')">🌱 Fertilizer Recommendations</button>
     <button onclick="sendQuickReply('📈 Crop Price Prediction')">📈 Crop Price Prediction</button>
   </div>
-  <div class="chatbot-input">
-    <input type="text" id="chatbotInput" placeholder="Ask me anything..." onkeypress="handleChatInput(event)">
-    <button class="btn-send" onclick="sendChatMessage()">➤</button>
+  <div class="chatbot-input" style="display: flex; gap: 8px; align-items: center; padding: 10px; border-top: 1px solid rgba(0,0,0,0.1);">
+    <button id="micBtn" class="btn-mic" onclick="startDictation()" style="background: none; border: none; font-size: 1.2rem; cursor: pointer; padding: 4px; color: var(--color-primary-dark);" title="Start Voice Input">🎤</button>
+    <input type="text" id="chatbotInput" placeholder="Ask me anything..." onkeypress="handleChatInput(event)" style="flex: 1; border: none; outline: none; padding: 8px;">
+    <button class="btn-send" onclick="sendChatMessage()" style="background: var(--color-primary); color: white; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center;">➤</button>
   </div>
 </div>
 

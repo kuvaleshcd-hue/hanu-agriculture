@@ -1150,6 +1150,43 @@ function toggleChatbot() {
   }
 }
 
+function startDictation() {
+  if (window.hasOwnProperty('SpeechRecognition') || window.hasOwnProperty('webkitSpeechRecognition')) {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    
+    // Set language mapping based on current app language
+    const langMap = {
+      'en': 'en-IN',
+      'hi': 'hi-IN',
+      'kn': 'kn-IN'
+    };
+    recognition.lang = langMap[currentLang] || 'en-IN';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    const micBtn = document.getElementById('micBtn');
+    micBtn.style.color = 'red'; // visual indicator for recording
+    
+    recognition.onresult = function(e) {
+      document.getElementById('chatbotInput').value = e.results[0][0].transcript;
+      recognition.stop();
+      micBtn.style.color = 'var(--color-primary-dark)';
+      sendChatMessage(); // Automatically send after transcription
+    };
+    
+    recognition.onerror = function(e) {
+      recognition.stop();
+      micBtn.style.color = 'var(--color-primary-dark)';
+      console.error('Speech recognition error', e.error);
+    };
+    
+    recognition.start();
+  } else {
+    showToast("Your browser does not support Speech Recognition.", "error");
+  }
+}
+
 function handleChatInput(event) {
   if (event.key === 'Enter') {
     sendChatMessage();
