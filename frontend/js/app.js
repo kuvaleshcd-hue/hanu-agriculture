@@ -14,6 +14,54 @@ let roiCostChart = null;
 let weatherTrendChart = null;
 let maturityFrameChart = null;
 
+// ── Navigation ────────────────────────────────────────────────────────────
+function navigateTo(page) {
+  // Hide all sections
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  
+  // Show target section
+  const target = document.getElementById(`page-${page}`);
+  if (target) {
+    target.classList.add('active');
+  }
+  
+  // Update sidebar active state
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.page === page);
+  });
+  
+  currentPage = page;
+  applyTranslations();
+  
+  // Close mobile sidebar
+  closeSidebar();
+  
+  // Lazy-load page data
+  if (page === 'schemes') loadSchemes();
+  if (page === 'price') loadPriceOptions();
+  if (page === 'fertilizer') loadFertilizerOptions();
+  if (page === 'demand-risk') fetchDemandRisk();
+  if (page === 'roi-calculator') calculateROI();
+  if (page === 'weather-advisory') loadWeatherAdvisory();
+  if (page === 'crop-maturity') initMaturityPage();
+  if (page === 'market') findNearbyMarkets();
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('active');
+}
+
+
+
 // ── Translations ──────────────────────────────────────────────────────────
 
 
