@@ -702,7 +702,23 @@ def chat():
                 
             state = match_state(message) or 'Karnataka'
             
-            result = price_predictor.predict_future(commodity, state, days=1)
+            import re
+            days_target = 1
+            month_match = re.search(r'(\d+)\s*month', msg_lower)
+            week_match = re.search(r'(\d+)\s*week', msg_lower)
+            day_match = re.search(r'(\d+)\s*day', msg_lower)
+            
+            if month_match:
+                days_target = int(month_match.group(1)) * 30
+            elif week_match:
+                days_target = int(week_match.group(1)) * 7
+            elif day_match:
+                days_target = int(day_match.group(1))
+                
+            if days_target <= 0: days_target = 1
+            if days_target > 180: days_target = 180 # cap at 180 days
+            
+            result = price_predictor.predict_future(commodity, state, days=days_target)
             
             if 'error' in result:
                 return jsonify({
@@ -711,12 +727,13 @@ def chat():
                     'text': trans['crop_price_err'].format(commodity=commodity, state=state)
                 })
                 
-            prediction = result['predictions'][0]
+            prediction = result['predictions'][-1]
+            time_text = f"in {days_target} days" if days_target > 1 else "currently"
             
             return jsonify({
                 'success': True,
                 'type': 'crop_price',
-                'text': f"The current predicted market price of {commodity} in {state} is ₹{prediction['predicted_price']}/quintal (Range: ₹{prediction['min_price']} - ₹{prediction['max_price']}).",
+                'text': f"The predicted market price of {commodity} in {state} {time_text} is ₹{prediction['predicted_price']}/quintal (Range: ₹{prediction['min_price']} - ₹{prediction['max_price']}).",
                 'data': {
                     'commodity': commodity,
                     'state': state,
