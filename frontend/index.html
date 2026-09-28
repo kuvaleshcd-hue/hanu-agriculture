@@ -235,15 +235,22 @@
   </style>
 </head>
 <body>
+<div style="position: absolute; top: 20px; right: 20px; z-index: 100;">
+  <select class="lang-selector" onchange="changeLanguage(this.value)" style="padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.4); background: rgba(255,255,255,0.9); font-size: 0.9rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    <option value="en">🇬🇧 English</option>
+    <option value="kn">🇮🇳 ಕನ್ನಡ</option>
+    <option value="hi">🇮🇳 हिन्दी</option>
+  </select>
+</div>
 
 <div class="auth-container">
   <img src="assets/hanu_logo.jpg" alt="Hanu Agri Logo" class="auth-logo" onerror="this.src='https://placehold.co/64x64/eab308/white?text=HA'">
-  <h2>Create an Account</h2>
-  <p>Join Hanu Agri to empower your farming decisions</p>
+  <h2 data-i18n="register_title">Create an Account</h2>
+  <p data-i18n="register_subtitle">Join Hanu Agri to empower your farming decisions</p>
 
   <form class="auth-form" onsubmit="event.preventDefault(); window.location.href='login.html';">
     <div class="form-group">
-      <label>Profile Photo (Optional)</label>
+      <label data-i18n="profile_photo_label">Profile Photo (Optional)</label>
       <div class="profile-upload-field">
         <label for="profileImageInput" title="Click to upload profile photo">
           <div class="profile-pic-container">
@@ -254,7 +261,7 @@
           </div>
         </label>
         <div class="profile-upload-text">
-          Click the icon to choose a profile picture.
+          <span data-i18n="profile_photo_help">Click the icon to choose a profile picture.</span>
         </div>
         <input type="file" id="profileImageInput" accept="image/*">
       </div>
@@ -262,24 +269,24 @@
 
     <div class="form-row">
       <div class="form-group">
-        <label for="firstName">First Name</label>
-        <input type="text" id="firstName" name="firstName" placeholder="John" required>
+        <label for="firstName" data-i18n="first_name_label">First Name</label>
+        <input type="text" id="firstName" name="firstName" placeholder="John" data-i18n="first_name_placeholder" required>
       </div>
       <div class="form-group">
-        <label for="lastName">Last Name</label>
-        <input type="text" id="lastName" name="lastName" placeholder="Doe" required>
+        <label for="lastName" data-i18n="last_name_label">Last Name</label>
+        <input type="text" id="lastName" name="lastName" placeholder="Doe" data-i18n="last_name_placeholder" required>
       </div>
     </div>
     
     <div class="form-group">
-      <label for="phone">Phone Number</label>
-      <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+      <label for="phone" data-i18n="phone_label">Phone Number</label>
+      <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" data-i18n="phone_placeholder" required>
     </div>
     
     <div class="form-group">
-      <label for="state">State</label>
+      <label for="state" data-i18n="state_label">State</label>
       <select id="state" name="state" required>
-        <option value="" disabled selected>Select your state</option>
+        <option value="" disabled selected data-i18n="state_placeholder">Select your state</option>
         <option value="karnataka">Karnataka</option>
         <option value="maharashtra">Maharashtra</option>
         <option value="punjab">Punjab</option>
@@ -290,15 +297,15 @@
     </div>
 
     <div class="form-group">
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+      <label for="password" data-i18n="password_label">Password</label>
+      <input type="password" id="password" name="password" placeholder="Create a strong password" data-i18n="password_create_placeholder" required>
     </div>
 
-    <button type="submit" class="auth-btn">Create Account</button>
+    <button type="submit" class="auth-btn" data-i18n="register_btn">Create Account</button>
   </form>
 
   <div class="auth-footer">
-    Already have an account? <a href="login.html">Sign In</a>
+    <span data-i18n="has_account">Already have an account?</span> <a href="login.html" data-i18n="sign_in_link">Sign In</a>
 </div>
 
 <script>
@@ -361,5 +368,6 @@
   });
 </script>
 
+<script src="js/i18n.js"></script>
 </body>
 </html>
