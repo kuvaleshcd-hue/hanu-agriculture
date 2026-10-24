@@ -1,4 +1,4 @@
-# Hanu Agri — Agricultural Demand Prediction System
+ # Hanu Agri — Agricultural Demand Prediction System
 
 ![Hanu Agri Banner](frontend/assets/hanu_logo.jpg) <!-- Optional, just pointing to local asset -->
 
